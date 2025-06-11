@@ -55,14 +55,16 @@ fun CaffeineTrackerScreen() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // --- Top "Main Dashboard" label ---
-            Text(
-                text = "Main Dashboard",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
+            LazyColumn(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // --- "Today's" Section ---
+                item {
+                    TodaysTotalSection()
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
             // --- Main content card ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,12 +76,6 @@ fun CaffeineTrackerScreen() {
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // --- "Today's" Section ---
-                    item {
-                        TodaysTotalSection()
-                        Spacer(modifier = Modifier.height(32.dp))
-                    }
-
                     // --- "Quick Add Suggestions" Section ---
                     item {
                         QuickAddSuggestionsHeader()
@@ -116,14 +112,6 @@ fun TodaysTotalSection() {
             color = Color(0xFF2E4A5D) // Dark teal color
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { /* Handle Add action */ },
-            shape = RoundedCornerShape(50), // Fully rounded corners
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E4A5D)),
-            contentPadding = PaddingValues(horizontal = 40.dp, vertical = 12.dp)
-        ) {
-            Text(text = "Add", fontSize = 16.sp)
-        }
     }
 }
 
