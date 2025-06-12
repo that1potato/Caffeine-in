@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,14 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.Dp
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 
@@ -41,7 +40,6 @@ data class CaffeineSource(
     val imageRes: Int // Using Int for drawable resource ID
 )
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CaffeineTrackerScreen() {
     // --- Sample data for the suggestion list ---
@@ -80,12 +78,7 @@ fun CaffeineTrackerScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        TodaysTotalSection()
-                        LinearWavyProgressIndicator(
-                            progress = { animatedProgress },
-                            amplitude = { 1f },
-                            color = Color(0xFF967259)
-                        )
+                        TodaysTotalSection(animatedProgress)
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
@@ -112,41 +105,63 @@ fun CaffeineTrackerScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TodaysTotalSection() {
+fun TodaysTotalSection(animatedProgress: Float) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.width(IntrinsicSize.Max)
     ) {
-        Text(
-            text = "Today's",
-            fontSize = 22.sp,
-            color = Color(0xFF967259)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
+        ) {
+            Row(
+                modifier = Modifier.padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Caffeine Level",
+                    maxLines = 1,
+                    color = Color(0xFF967259),
+                    fontSize = 20.sp
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Button(
+                    onClick = { /* Handle specific item add */ },
+                    modifier = Modifier.size(18.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF967259)),
+                    contentPadding = PaddingValues(horizontal = 0.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = "Info",
+                        tint = Color(0xFFECE0D1)
+                    )
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "250 mg",
-            fontSize = 56.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
+            autoSize = TextAutoSize.StepBased(
+                maxFontSize = 80.sp
+            ),
+            maxLines = 1,
             color = Color(0xFF38220F)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        LinearWavyProgressIndicator(
+            progress = { animatedProgress },
+            amplitude = { 1f },
+            color = Color(0xFF967259),
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
-@ExperimentalMaterial3ExpressiveApi
-@Composable
-fun LinearWavyProgressIndicator(
-    modifier: Modifier = Modifier,
-    color: Color = WavyProgressIndicatorDefaults.indicatorColor,
-    trackColor: Color = WavyProgressIndicatorDefaults.trackColor,
-    stroke: Stroke = WavyProgressIndicatorDefaults.linearIndicatorStroke,
-    trackStroke: Stroke = WavyProgressIndicatorDefaults.linearTrackStroke,
-    gapSize: Dp = WavyProgressIndicatorDefaults.LinearIndicatorTrackGapSize,
-    stopSize: Dp = WavyProgressIndicatorDefaults.LinearTrackStopIndicatorSize,
-    amplitude: (progress: Float) -> Float = WavyProgressIndicatorDefaults.indicatorAmplitude,
-    wavelength: Dp = WavyProgressIndicatorDefaults.LinearDeterminateWavelength,
-) {}
 
 @Composable
 fun QuickAddHeader() {
@@ -161,7 +176,6 @@ fun QuickAddHeader() {
 }
 
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SuggestionItem(source: CaffeineSource) {
     // --- Card for each suggestion item for a subtle background and shape ---
@@ -195,9 +209,10 @@ fun SuggestionItem(source: CaffeineSource) {
             // --- Add Button ---
             Button(
                 onClick = { /* Handle specific item add */ },
-                shape = CircleShape,
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.size(48.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
-                contentPadding = PaddingValues(horizontal = 24.dp)
+                contentPadding = PaddingValues(horizontal = 0.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
