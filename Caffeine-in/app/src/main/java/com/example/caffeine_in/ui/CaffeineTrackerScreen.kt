@@ -3,6 +3,8 @@ package com.example.caffeine_in.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.FloatRange
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,6 +24,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.Dp
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.setValue
+
 
 // Note: You would need to add actual images to your `res/drawable` folder
 // for this to work. I've used placeholder names like `R.drawable.coffee`.
@@ -35,6 +55,7 @@ data class CaffeineSource(
     val imageRes: Int // Using Int for drawable resource ID
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CaffeineTrackerScreen() {
     // --- Sample data for the suggestion list ---
@@ -42,6 +63,12 @@ fun CaffeineTrackerScreen() {
         CaffeineSource("Coffee", 95, R.drawable.coffee_placeholder),
         CaffeineSource("Green Tea", 35, R.drawable.green_tea_placeholder),
         CaffeineSource("Energy Drink", 80, R.drawable.energy_drink_placeholder)
+    )
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = 1.0f,
+        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+        label = "ProgressAnimation"
     )
 
     // --- Main container with a light gray background ---
@@ -62,6 +89,10 @@ fun CaffeineTrackerScreen() {
                 // --- "Today's" Section ---
                 item {
                     TodaysTotalSection()
+                    LinearWavyProgressIndicator(
+                        progress = { animatedProgress },
+                        amplitude = { 1f }
+                    )
                     Spacer(modifier = Modifier.height(32.dp))
                 }
             }
@@ -115,11 +146,25 @@ fun TodaysTotalSection() {
     }
 }
 
+@ExperimentalMaterial3ExpressiveApi
+@Composable
+fun LinearWavyProgressIndicator(
+    modifier: Modifier = Modifier,
+    color: Color = WavyProgressIndicatorDefaults.indicatorColor,
+    trackColor: Color = WavyProgressIndicatorDefaults.trackColor,
+    stroke: Stroke = WavyProgressIndicatorDefaults.linearIndicatorStroke,
+    trackStroke: Stroke = WavyProgressIndicatorDefaults.linearTrackStroke,
+    gapSize: Dp = WavyProgressIndicatorDefaults.LinearIndicatorTrackGapSize,
+    stopSize: Dp = WavyProgressIndicatorDefaults.LinearTrackStopIndicatorSize,
+    amplitude: (progress: Float) -> Float = WavyProgressIndicatorDefaults.indicatorAmplitude,
+    wavelength: Dp = WavyProgressIndicatorDefaults.LinearDeterminateWavelength,
+) {}
+
 @Composable
 fun QuickAddSuggestionsHeader() {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Quick Add Suggestions",
+            text = "Quick Add",
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color.DarkGray
