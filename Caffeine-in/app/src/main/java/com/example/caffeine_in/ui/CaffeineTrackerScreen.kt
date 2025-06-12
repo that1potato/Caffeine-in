@@ -61,7 +61,7 @@ fun CaffeineTrackerScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF0F0F0)) // Light gray background
+            .background(Color(0xFFECE0D1)) // Light gray background
     ) {
         Column(
             modifier = Modifier
@@ -83,7 +83,8 @@ fun CaffeineTrackerScreen() {
                         TodaysTotalSection()
                         LinearWavyProgressIndicator(
                             progress = { animatedProgress },
-                            amplitude = { 1f }
+                            amplitude = { 1f },
+                            color = Color(0xFF967259)
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                     }
@@ -120,14 +121,14 @@ fun TodaysTotalSection() {
         Text(
             text = "Today's",
             fontSize = 22.sp,
-            color = Color.Gray
+            color = Color(0xFF967259)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "250 mg",
             fontSize = 56.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF2E4A5D) // Dark teal color
+            color = Color(0xFF38220F)
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -154,7 +155,7 @@ fun QuickAddHeader() {
             text = "Quick Add",
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.DarkGray
+            color = Color(0xFF38220F)
         )
     }
 }
@@ -167,8 +168,8 @@ fun SuggestionItem(source: CaffeineSource) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)), // Very light gray
-        border = BorderStroke(width = 1.dp, color = Color(0xFF2E4A5D))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
+        border = BorderStroke(width = 1.dp, color = Color(0xFF967259))
     ) {
         Row(
             modifier = Modifier
@@ -182,11 +183,11 @@ fun SuggestionItem(source: CaffeineSource) {
                     text = source.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Color.DarkGray
+                    color = Color(0xFF38220F)
                 )
                 Text(
                     text = "${source.amount} mg",
-                    color = Color.Gray,
+                    color = Color(0xFF967259),
                     fontSize = 14.sp
                 )
             }
@@ -195,13 +196,13 @@ fun SuggestionItem(source: CaffeineSource) {
             Button(
                 onClick = { /* Handle specific item add */ },
                 shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E4A5D)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
                 contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
-                    tint = Color.White
+                    tint = Color(0xFFECE0D1)
                 )
             }
         }
