@@ -17,14 +17,11 @@ import androidx.compose.material3.Surface
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            // It's standard practice to wrap your UI in a theme
-            // and a Surface for background colors.
             MaterialTheme {
                 Surface {
-                    // This is where you call the main UI function
-                    // from the document.
                     com.example.caffeine_in.ui.CaffeineTrackerScreen()
                 }
             }
