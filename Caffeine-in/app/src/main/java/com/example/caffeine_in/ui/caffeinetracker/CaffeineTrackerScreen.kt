@@ -1,4 +1,4 @@
-package com.example.caffeine_in.ui
+package com.example.caffeine_in.ui.caffeinetracker
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
