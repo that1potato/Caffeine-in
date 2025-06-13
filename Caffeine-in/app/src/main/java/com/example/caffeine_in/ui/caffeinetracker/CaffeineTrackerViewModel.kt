@@ -25,7 +25,7 @@ class CaffeineTrackerViewModel : ViewModel() {
 
     init {
         if (_initialCaffeineMg.floatValue == 0f && _displayedCaffeineMg.floatValue == 0f) {
-            val simulatedInitialAmount = 250
+            val simulatedInitialAmount = 300
             if (simulatedInitialAmount > 0) {
                 _initialCaffeineMg.floatValue = simulatedInitialAmount.toFloat()
                 _lastIngestionTimeMillis.longValue = System.currentTimeMillis()

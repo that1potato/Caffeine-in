@@ -1,6 +1,7 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.EaseInCubic
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +34,8 @@ import kotlin.math.roundToInt
 // for this to work. I've used placeholder names like `R.drawable.coffee`.
 // If you don't have these, the app will crash. For preview purposes,
 // you can replace the Image composable with a colored Box.
+
+const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
 
 // --- Data class to hold suggestion information ---
 data class CaffeineSource(
@@ -117,6 +120,21 @@ fun CaffeineTrackerScreen(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
+
+    val waveSpeed: Float // 20~60
+    val waveLength: Float // 30~90
+
+    if (caffeineAmount >= maxCaffeineAmount) {
+        waveSpeed = 60f
+        waveLength = 30f
+    } else if (caffeineAmount == 0f) {
+        waveSpeed = 20f
+        waveLength = 90f
+    } else {
+        waveSpeed = EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 40 + 20
+        waveLength = 90 - EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 66
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(IntrinsicSize.Max)
@@ -165,6 +183,8 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         LinearWavyProgressIndicator(
             progress = { animatedProgress },
             amplitude = { 1f },
+            waveSpeed = waveSpeed.dp,
+            wavelength = waveLength.dp,
             color = Color(0xFF967259),
             modifier = Modifier.fillMaxWidth()
         )
