@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlin.math.roundToInt
 
 // Note: You would need to add actual images to your `res/drawable` folder
@@ -170,7 +171,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "${caffeineAmount.roundToInt()} mg",
+            text = "${caffeineAmount.roundToInt()}mg",
             fontWeight = FontWeight.ExtraBold,
             autoSize = TextAutoSize.StepBased(
                 maxFontSize = 80.sp
@@ -228,7 +229,7 @@ fun SuggestionItem(source: CaffeineSource) {
                     color = Color(0xFF38220F)
                 )
                 Text(
-                    text = "${source.amount} mg",
+                    text = "${source.amount}mg",
                     color = Color(0xFF967259),
                     fontSize = 14.sp
                 )
@@ -257,7 +258,7 @@ fun SuggestionItem(source: CaffeineSource) {
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
 fun DefaultPreview() {
-    MaterialTheme {
+    CaffeineinTheme {
         CaffeineTrackerScreen()
     }
 }
