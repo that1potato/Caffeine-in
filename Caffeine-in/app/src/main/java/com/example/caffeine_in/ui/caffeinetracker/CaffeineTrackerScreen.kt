@@ -121,18 +121,18 @@ fun CaffeineTrackerScreen(
 @Composable
 fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 
-    val waveSpeed: Float // 20~60
-    val waveLength: Float // 30~90
+    val waveSpeed: Float // 30~60
+    val waveLength: Float // 30~80
 
     if (caffeineAmount >= maxCaffeineAmount) {
         waveSpeed = 60f
         waveLength = 30f
     } else if (caffeineAmount == 0f) {
-        waveSpeed = 20f
-        waveLength = 90f
+        waveSpeed = 30f
+        waveLength = 80f
     } else {
-        waveSpeed = EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 40 + 20
-        waveLength = 90 - EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 66
+        waveSpeed = EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 30 + 30
+        waveLength = 80 - EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 50
     }
 
     Column(
