@@ -79,7 +79,12 @@ fun CaffeineTrackerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 0.dp
+                )
                 .statusBarsPadding(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -103,17 +108,21 @@ fun CaffeineTrackerScreen(
             }
 
             // --- quick add card ---
+            Row(
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Spacer(modifier = Modifier.width(16.dp))
+                QuickAddHeader()
+            }
             LazyColumn(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 0.dp
+                ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // --- "Quick Add" Section ---
-                item {
-                    QuickAddHeader()
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-
-                // --- List of items ---
                 items(suggestions) { source ->
                     QuickAdd(
                         source = source,
@@ -122,6 +131,9 @@ fun CaffeineTrackerScreen(
                         }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
+                }
+                item {
+                    Spacer(modifier = Modifier.height(48.dp))
                 }
             }
         }
