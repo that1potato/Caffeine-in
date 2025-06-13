@@ -26,7 +26,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.math.roundToInt
 
 // Note: You would need to add actual images to your `res/drawable` folder
 // for this to work. I've used placeholder names like `R.drawable.coffee`.
@@ -41,13 +42,18 @@ data class CaffeineSource(
 )
 
 @Composable
-fun CaffeineTrackerScreen() {
+fun CaffeineTrackerScreen(
+    caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel()
+) {
     // --- Sample data for the suggestion list ---
     val suggestions = listOf(
         CaffeineSource("Coffee", 95, R.Drawable.coffee_placeholder),
         CaffeineSource("Green Tea", 35, R.Drawable.green_tea_placeholder),
         CaffeineSource("Energy Drink", 80, R.Drawable.energy_drink_placeholder)
     )
+
+    // Observe state from the ViewModel
+    val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
 
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -78,7 +84,10 @@ fun CaffeineTrackerScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        TodaysTotalSection(animatedProgress)
+                        TodaysTotalSection(
+                            animatedProgress = animatedProgress,
+                            caffeineAmount = displayedCaffeineMg
+                        )
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
@@ -107,7 +116,7 @@ fun CaffeineTrackerScreen() {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TodaysTotalSection(animatedProgress: Float) {
+fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(IntrinsicSize.Max)
@@ -144,7 +153,7 @@ fun TodaysTotalSection(animatedProgress: Float) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "250 mg",
+            text = "${caffeineAmount.roundToInt()} mg",
             fontWeight = FontWeight.ExtraBold,
             autoSize = TextAutoSize.StepBased(
                 maxFontSize = 80.sp
