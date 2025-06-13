@@ -41,7 +41,6 @@ const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for mos
 data class CaffeineSource(
     val name: String,
     val amount: Int,
-    val imageRes: Int // Using Int for drawable resource ID
 )
 
 @Composable
@@ -50,9 +49,9 @@ fun CaffeineTrackerScreen(
 ) {
     // --- Sample data for the suggestion list ---
     val suggestions = listOf(
-        CaffeineSource("Coffee", 95, R.Drawable.coffee_placeholder),
-        CaffeineSource("Green Tea", 35, R.Drawable.green_tea_placeholder),
-        CaffeineSource("Energy Drink", 80, R.Drawable.energy_drink_placeholder)
+        CaffeineSource("Coffee", 95),
+        CaffeineSource("Green Tea", 35),
+        CaffeineSource("Energy Drink", 80)
     )
 
     // Observe state from the ViewModel
@@ -260,15 +259,5 @@ fun SuggestionItem(source: CaffeineSource) {
 fun DefaultPreview() {
     MaterialTheme {
         CaffeineTrackerScreen()
-    }
-}
-
-// --- Dummy Drawable Resources for Preview ---
-// In a real project, these would be actual image files in res/drawable
-object R {
-    object Drawable {
-        const val coffee_placeholder = 1
-        const val green_tea_placeholder = 2
-        const val energy_drink_placeholder = 3
     }
 }
