@@ -52,7 +52,13 @@ fun CaffeineTrackerScreen(
     val suggestions = listOf(
         CaffeineSource("Coffee", 95),
         CaffeineSource("Green Tea", 35),
-        CaffeineSource("Energy Drink", 80)
+        CaffeineSource("Energy Drink", 80),
+        CaffeineSource("Coffee", 95),
+        CaffeineSource("Green Tea", 35),
+        CaffeineSource("Energy Drink", 80),
+        CaffeineSource("Coffee", 95),
+        CaffeineSource("Green Tea", 35),
+        CaffeineSource("Energy Drink", 80),
     )
 
     // Observe state from the ViewModel
@@ -101,15 +107,20 @@ fun CaffeineTrackerScreen(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // --- "Quick Add Suggestions" Section ---
+                // --- "Quick Add" Section ---
                 item {
                     QuickAddHeader()
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                // --- List of suggestion items ---
+                // --- List of items ---
                 items(suggestions) { source ->
-                    SuggestionItem(source = source)
+                    QuickAdd(
+                        source = source,
+                        onAddCaffeine = { amount ->
+                            caffeineTrackerViewModel.addCaffeine(amount)
+                        }
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
@@ -206,7 +217,10 @@ fun QuickAddHeader() {
 
 
 @Composable
-fun SuggestionItem(source: CaffeineSource) {
+fun QuickAdd(
+    source: CaffeineSource,
+    onAddCaffeine: (Int) -> Unit
+) {
     // --- Card for each suggestion item for a subtle background and shape ---
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -237,7 +251,7 @@ fun SuggestionItem(source: CaffeineSource) {
 
             // --- Add Button ---
             Button(
-                onClick = { /* Handle specific item add */ },
+                onClick = { onAddCaffeine(source.amount) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.size(48.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
