@@ -107,33 +107,35 @@ fun CaffeineTrackerScreen(
                 }
             }
 
-            // --- quick add card ---
-            Row(
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Spacer(modifier = Modifier.width(16.dp))
-                QuickAddHeader()
-            }
-            LazyColumn(
-                modifier = Modifier.padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 0.dp
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(suggestions) { source ->
-                    QuickAdd(
-                        source = source,
-                        onAddCaffeine = { amount ->
-                            caffeineTrackerViewModel.addCaffeine(amount)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+            // --- history card ---
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Spacer(modifier = Modifier.width(16.dp))
+                    HistoryHeader()
                 }
-                item {
-                    Spacer(modifier = Modifier.height(48.dp))
+                LazyColumn(
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 0.dp
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(suggestions) { source ->
+                        History(
+                            source = source,
+                            onAddCaffeine = { amount ->
+                                caffeineTrackerViewModel.addCaffeine(amount)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(48.dp))
+                    }
                 }
             }
         }
@@ -216,10 +218,10 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 }
 
 @Composable
-fun QuickAddHeader() {
+fun HistoryHeader() {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Quick Add",
+            text = "History",
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color(0xFF38220F)
@@ -229,7 +231,7 @@ fun QuickAddHeader() {
 
 
 @Composable
-fun QuickAdd(
+fun History(
     source: CaffeineSource,
     onAddCaffeine: (Int) -> Unit
 ) {
