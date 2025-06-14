@@ -31,11 +31,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlin.math.roundToInt
 
-// Note: You would need to add actual images to your `res/drawable` folder
-// for this to work. I've used placeholder names like `R.drawable.coffee`.
-// If you don't have these, the app will crash. For preview purposes,
-// you can replace the Image composable with a colored Box.
-
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
 
 // --- Data class to hold suggestion information ---
@@ -70,7 +65,6 @@ fun CaffeineTrackerScreen(
         label = "ProgressAnimation"
     )
 
-    // --- Main container with a light gray background ---
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -197,7 +191,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "${caffeineAmount.roundToInt()}mg",
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.Bold,
             autoSize = TextAutoSize.StepBased(
                 maxFontSize = 80.sp
             ),

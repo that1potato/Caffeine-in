@@ -1,19 +1,24 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
+import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.caffeine_in.data.DataRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
 const val CAFFEINE_HALF_LIFE_HOURS_VM = 5.0 // caffeine's half life is about 5hrs on average
 const val CAFFEINE_HALF_LIFE_MILLIS_VM = CAFFEINE_HALF_LIFE_HOURS_VM * 60 * 60 * 1000
 
-class CaffeineTrackerViewModel : ViewModel() {
+class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val dataRepository = DataRepository(application)
 
     // val initialCaffeineMg: State<Float> = _initialCaffeineMg
     private val _initialCaffeineMg = mutableFloatStateOf(0f)
@@ -27,47 +32,64 @@ class CaffeineTrackerViewModel : ViewModel() {
     private var decayCalculationJob: Job? = null // manage the decay coroutine
 
     init {
-        val simulatedInitialAmount = 300 // Example: could be 0 or loaded
-        if (simulatedInitialAmount > 0) {
-            _initialCaffeineMg.floatValue = simulatedInitialAmount.toFloat()
-            _lastIngestionTimeMillis.longValue = System.currentTimeMillis()
-            _displayedCaffeineMg.floatValue = simulatedInitialAmount.toFloat()
+        loadAndStart()
+    }
+
+    private fun loadAndStart() {
+        viewModelScope.launch {
+            // Load saved state
+            val (savedInitialMg, savedLastIngestionTime) = dataRepository.caffeineStateFlow.first()
+
+            if (savedInitialMg > 0f && savedLastIngestionTime > 0L) {
+                _initialCaffeineMg.floatValue = savedInitialMg
+                _lastIngestionTimeMillis.longValue = savedLastIngestionTime
+                // The decay calculation will correctly set _displayedCaffeineMg
+            } else {
+                // If nothing is saved or values are invalid, ensure a clean state
+                _initialCaffeineMg.floatValue = 0f
+                _lastIngestionTimeMillis.longValue = 0L
+                _displayedCaffeineMg.floatValue = 0f
+            }
+            startOrRestartDecayCalculation() // Start decay calculation after loading
         }
-        startOrRestartDecayCalculation() // Start decay calculation
     }
 
     private fun startOrRestartDecayCalculation() {
-        decayCalculationJob?.cancel() // Cancel any existing job
+        decayCalculationJob?.cancel()
         decayCalculationJob = viewModelScope.launch {
-            if (_initialCaffeineMg.floatValue == 0f) {
+            if (_initialCaffeineMg.floatValue == 0f || _lastIngestionTimeMillis.longValue == 0L) {
                 _displayedCaffeineMg.floatValue = 0f
-                return@launch // Don't start if no initial caffeine
+                dataRepository.clearCaffeineState() // clear persisted
+                return@launch
             }
 
             while (true) {
-                // Exit condition if caffeine is no longer being tracked (e.g. reset)
                 if (_initialCaffeineMg.floatValue == 0f) {
                     _displayedCaffeineMg.floatValue = 0f
+                    dataRepository.clearCaffeineState() // clear persisted state if it decays to zero
                     break
                 }
 
                 val currentTimeMillis = System.currentTimeMillis()
                 val timeElapsedMillis = (currentTimeMillis - _lastIngestionTimeMillis.longValue).toDouble()
 
-                if (timeElapsedMillis < 0) { // Should ideally not happen if time is set correctly
-                    _displayedCaffeineMg.floatValue = _initialCaffeineMg.floatValue
-                    delay(1000)
-                    continue
-                }
+                // If lastIngestionTime is in the future (e.g., device time changed),
+                // treat it as no time elapsed for decay calculation.
+                // Or, more robustly, cap timeElapsedMillis at 0 if negative.
+                val effectiveTimeElapsedMillis = if (timeElapsedMillis < 0) 0.0 else timeElapsedMillis
 
-                val currentCalculatedMg = _initialCaffeineMg.floatValue * (0.5).pow(timeElapsedMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
+
+                // Calculate based on the initially ingested amount and the total time elapsed since that ingestion
+                val currentCalculatedMg = _initialCaffeineMg.floatValue * (0.5).pow(effectiveTimeElapsedMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
                 _displayedCaffeineMg.floatValue = if (currentCalculatedMg < 1) 0f else currentCalculatedMg.toFloat()
 
-                // If caffeine fully decays, reset initial values to stop further calculations in the loop
                 if (_displayedCaffeineMg.floatValue == 0f) {
+                    //reset internal state and persisted state.
                     _initialCaffeineMg.floatValue = 0f
+                    _lastIngestionTimeMillis.longValue = 0L // Reset this too
+                    dataRepository.clearCaffeineState() // Clear from DataStore
                 }
-                delay(1000) // Update every second
+                delay(1000)
             }
         }
     }
@@ -75,41 +97,49 @@ class CaffeineTrackerViewModel : ViewModel() {
     fun addCaffeine(amount: Int) {
         if (amount <= 0) return
 
-        val currentTimeMillis = System.currentTimeMillis()
-        val timeElapsedSinceLastIngestionMillis = (currentTimeMillis - _lastIngestionTimeMillis.longValue).toDouble()
+        viewModelScope.launch {
+            val currentTimeMillis = System.currentTimeMillis()
+            var currentEffectiveMg = 0.0
 
-        val remainingFromPrevious = if (_initialCaffeineMg.floatValue > 0f && _lastIngestionTimeMillis.longValue > 0L && timeElapsedSinceLastIngestionMillis > 0) {
-            _initialCaffeineMg.floatValue * (0.5).pow(timeElapsedSinceLastIngestionMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
-        } else {
-            0.0
+            // If there was previous caffeine, calculate its current decayed value
+            if (_initialCaffeineMg.floatValue > 0f && _lastIngestionTimeMillis.longValue > 0L) {
+                val timeElapsedSinceLastIngestionMillis = (currentTimeMillis - _lastIngestionTimeMillis.longValue).toDouble()
+                if (timeElapsedSinceLastIngestionMillis > 0) {
+                    currentEffectiveMg = _initialCaffeineMg.floatValue * (0.5).pow(timeElapsedSinceLastIngestionMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
+                } else {
+                    // If no time has passed or time is somehow negative, use the last known initial amount.
+                    currentEffectiveMg = _initialCaffeineMg.floatValue.toDouble()
+                }
+            }
+            // Ensure currentEffectiveMg isn't negative or extremely small before adding
+            if (currentEffectiveMg < 0.5) currentEffectiveMg = 0.0
+
+
+            val newTotalInitialEquivalentMg = (currentEffectiveMg + amount).toFloat()
+
+            _initialCaffeineMg.floatValue = newTotalInitialEquivalentMg
+            _lastIngestionTimeMillis.longValue = currentTimeMillis // This is the new "start" point for this total amount
+            _displayedCaffeineMg.floatValue = newTotalInitialEquivalentMg // Update display immediately
+
+            // Save the new state
+            dataRepository.saveCaffeineState(newTotalInitialEquivalentMg, currentTimeMillis)
+            startOrRestartDecayCalculation()
         }
-
-        val newTotalInitialMg = (remainingFromPrevious + amount).toFloat()
-
-        _initialCaffeineMg.floatValue = newTotalInitialMg
-        _lastIngestionTimeMillis.longValue = currentTimeMillis
-        _displayedCaffeineMg.floatValue = newTotalInitialMg // Update display immediately
-
-        startOrRestartDecayCalculation()
     }
 
-    // Call this when the ViewModel is about to be cleared
+    fun resetCaffeineTracker() {
+        viewModelScope.launch {
+            _initialCaffeineMg.floatValue = 0f
+            _lastIngestionTimeMillis.longValue = 0L
+            _displayedCaffeineMg.floatValue = 0f
+            dataRepository.clearCaffeineState()
+            decayCalculationJob?.cancel() // Stop any ongoing calculation
+        }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
-        decayCalculationJob?.cancel() // Cancel the coroutine when ViewModel is cleared
+        decayCalculationJob?.cancel()
     }
-
-    // --- Persistence methods (to be implemented) ---
-    // fun loadCaffeineState() {
-    //     viewModelScope.launch {
-    //         // Load _initialCaffeineMg and _lastIngestionTimeMillis from DataStore/Room
-    //         // Then call startContinuousDecayCalculation or ensure it's running
-    //     }
-    // }
-    //
-    // fun saveCaffeineState() {
-    //     viewModelScope.launch {
-    //         // Save _initialCaffeineMg and _lastIngestionTimeMillis to DataStore/Room
-    //     }
-    // }
 }
