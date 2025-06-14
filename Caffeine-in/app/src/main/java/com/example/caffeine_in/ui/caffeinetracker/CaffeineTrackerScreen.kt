@@ -30,7 +30,6 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
-import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 import kotlin.math.roundToInt
 
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
@@ -201,7 +200,8 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
                     text = "Caffeine Level",
                     maxLines = 1,
                     color = Color(0xFF967259),
-                    fontSize = 20.sp
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -247,7 +247,7 @@ fun HistoryHeader() {
         Text(
             text = "History",
             fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             color = Color(0xFF38220F)
         )
     }
@@ -276,7 +276,7 @@ fun History(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = source.name,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = Color(0xFF38220F)
                 )
