@@ -21,6 +21,7 @@ import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,11 +30,12 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
+import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 import kotlin.math.roundToInt
 
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
 
-// --- Data class to hold suggestion information ---
+// --- Data class to hold history information ---
 data class CaffeineSource(
     val name: String,
     val amount: Int,
@@ -44,16 +46,15 @@ fun CaffeineTrackerScreen(
     caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel()
 ) {
     // --- Sample data for the suggestion list ---
-    val suggestions = listOf(
+    val historyList = listOf(
         CaffeineSource("Coffee", 95),
         CaffeineSource("Green Tea", 35),
-        CaffeineSource("Energy Drink", 80),
-        CaffeineSource("Coffee", 95),
-        CaffeineSource("Green Tea", 35),
-        CaffeineSource("Energy Drink", 80),
-        CaffeineSource("Coffee", 95),
-        CaffeineSource("Green Tea", 35),
-        CaffeineSource("Energy Drink", 80),
+        CaffeineSource("Red Bull", 80),
+        CaffeineSource("Green Bull", 80),
+        CaffeineSource("Yellow Bull", 80),
+        CaffeineSource("Blue Bull", 80),
+        CaffeineSource("Grey Bull", 80),
+        CaffeineSource("Pink Bull", 80)
     )
 
     // Observe state from the ViewModel
@@ -118,7 +119,7 @@ fun CaffeineTrackerScreen(
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(suggestions) { source ->
+                    items(historyList) { source ->
                         History(
                             source = source,
                             onAddCaffeine = { amount ->
@@ -128,9 +129,38 @@ fun CaffeineTrackerScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     item {
-                        Spacer(modifier = Modifier.height(48.dp))
+                        Spacer(modifier = Modifier.height(96.dp))
                     }
                 }
+            }
+        }
+
+        // --- Floating add button ---
+        FloatingActionButton(
+            onClick = { /* TODO: Handle FAB click, e.g., open a dialog to add custom caffeine intake */ },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(16.dp),
+            shape = RoundedCornerShape(50.dp),
+            containerColor = Color(0xFFE07319)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add Caffeine",
+                    tint = Color(0xFF38220F)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "New Caffeine Source",
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF38220F)
+                )
             }
         }
     }
@@ -173,10 +203,10 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
                     color = Color(0xFF967259),
                     fontSize = 20.sp
                 )
-                Spacer(modifier = Modifier.width(6.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = { /* Handle specific item add */ },
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF967259)),
                     contentPadding = PaddingValues(horizontal = 0.dp)
                 ) {
