@@ -15,6 +15,7 @@ import kotlin.math.pow
 
 const val CAFFEINE_HALF_LIFE_HOURS_VM = 5.0 // caffeine's half life is about 5hrs on average
 const val CAFFEINE_HALF_LIFE_MILLIS_VM = CAFFEINE_HALF_LIFE_HOURS_VM * 60 * 60 * 1000
+const val DELAY_INTERVAL = 7000L // 7sec
 
 class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -89,7 +90,7 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
                     _lastIngestionTimeMillis.longValue = 0L // Reset this too
                     dataRepository.clearCaffeineState() // Clear from DataStore
                 }
-                delay(1000)
+                delay(DELAY_INTERVAL)
             }
         }
     }
@@ -104,11 +105,11 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             // If there was previous caffeine, calculate its current decayed value
             if (_initialCaffeineMg.floatValue > 0f && _lastIngestionTimeMillis.longValue > 0L) {
                 val timeElapsedSinceLastIngestionMillis = (currentTimeMillis - _lastIngestionTimeMillis.longValue).toDouble()
-                if (timeElapsedSinceLastIngestionMillis > 0) {
-                    currentEffectiveMg = _initialCaffeineMg.floatValue * (0.5).pow(timeElapsedSinceLastIngestionMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
+                currentEffectiveMg = if (timeElapsedSinceLastIngestionMillis > 0) {
+                    _initialCaffeineMg.floatValue * (0.5).pow(timeElapsedSinceLastIngestionMillis / CAFFEINE_HALF_LIFE_MILLIS_VM)
                 } else {
                     // If no time has passed or time is somehow negative, use the last known initial amount.
-                    currentEffectiveMg = _initialCaffeineMg.floatValue.toDouble()
+                    _initialCaffeineMg.floatValue.toDouble()
                 }
             }
             // Ensure currentEffectiveMg isn't negative or extremely small before adding
