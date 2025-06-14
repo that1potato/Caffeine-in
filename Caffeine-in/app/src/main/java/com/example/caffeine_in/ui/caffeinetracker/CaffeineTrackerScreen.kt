@@ -143,7 +143,7 @@ fun CaffeineTrackerScreen(
                 .navigationBarsPadding()
                 .padding(16.dp),
             shape = RoundedCornerShape(50.dp),
-            containerColor = Color(0xFFE07319)
+            containerColor = Color(0xFFE57825)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
