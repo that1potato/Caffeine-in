@@ -1,7 +1,13 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
@@ -34,7 +39,6 @@ import kotlin.math.roundToInt
 
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
 
-// --- Data class to hold history information ---
 data class CaffeineSource(
     val name: String,
     val amount: Int,
@@ -68,7 +72,7 @@ fun CaffeineTrackerScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFECE0D1)) // Light gray background
+            .background(Color(0xFFECE0D1))
     ) {
         Column(
             modifier = Modifier
@@ -183,6 +187,19 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         waveLength = 80 - EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 50
     }
 
+    /*val targetFontSize = when {
+        caffeineAmount.roundToInt() < 1000 -> 80.sp
+        caffeineAmount.roundToInt() < 10000 -> 78.sp
+        caffeineAmount.roundToInt() < 100000 -> 75.sp
+        else -> 72.sp
+    }*/
+
+    /*val animatedFontSize by animateDpAsState(
+        targetValue = targetFontSize.value.dp, // Use the targetFontSize determined above
+        label = "FontSizeAnimation",
+        animationSpec = tween(durationMillis = 300)
+    )*/
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(IntrinsicSize.Max)
@@ -219,15 +236,37 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "${caffeineAmount.roundToInt()}mg",
-            fontWeight = FontWeight.Bold,
-            autoSize = TextAutoSize.StepBased(
-                maxFontSize = 80.sp
-            ),
-            maxLines = 1,
-            color = Color(0xFF38220F)
-        )
+        Row(verticalAlignment = Alignment.Bottom) {
+            AnimatedContent(
+                targetState = caffeineAmount.roundToInt(),
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInVertically { height -> height } + fadeIn() togetherWith
+                                slideOutVertically { height -> -height } + fadeOut()
+                    } else {
+                        slideInVertically { height -> -height } + fadeIn() togetherWith
+                                slideOutVertically { height -> height } + fadeOut()
+                    }
+                },
+                label = "CaffeineAmountNumberAnimation"
+            ) { targetCaffeineAmount ->
+                Text(
+                    text = "$targetCaffeineAmount",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 80.sp,
+                    maxLines = 1,
+                    color = Color(0xFF38220F)
+                )
+            }
+            Text( // Static "mg" unit
+                text = "mg",
+                fontWeight = FontWeight.Bold,
+                fontSize = 80.sp,
+                maxLines = 1,
+                color = Color(0xFF38220F),
+                modifier = Modifier.padding(start = 4.dp) // Add a small space
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         LinearWavyProgressIndicator(
             progress = { animatedProgress },
