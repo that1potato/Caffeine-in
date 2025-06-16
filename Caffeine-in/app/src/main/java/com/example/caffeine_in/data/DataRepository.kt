@@ -54,6 +54,13 @@ class DataRepository(private val context: Context) {
             Json.decodeFromString<List<CaffeineSource>>(jsonString)
         }
 
+    // TODO: for debug use only
+    suspend fun setHistoryList(historyList: List<CaffeineSource>) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(historyList)
+        }
+    }
+
     suspend fun saveCaffeineState(initialMg: Float, lastIngestionTimeMillis: Long) {
         context.dataStore.edit { settings ->
             settings[PreferencesKeys.INITIAL_CAFFEINE_MG] = initialMg
