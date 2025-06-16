@@ -6,9 +6,13 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.data.DataRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.pow
@@ -32,8 +36,18 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
 
     private var decayCalculationJob: Job? = null // manage the decay coroutine
 
+    // StateFlow for the History List
+    private val _historyList = MutableStateFlow<List<CaffeineSource>>(emptyList())
+    val historyList: StateFlow<List<CaffeineSource>> = _historyList.asStateFlow()
+
+
     init {
         loadAndStart()
+        viewModelScope.launch {
+            dataRepository.historyListFlow.collect { history ->
+                _historyList.value = history
+            }
+        }
     }
 
     private fun loadAndStart() {
@@ -138,6 +152,20 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
+    fun addCaffeineSource(name: String, amount: Int) {
+        if (name.isBlank() || amount <= 0) return
+        viewModelScope.launch {
+            val newSource = CaffeineSource(name, amount)
+            dataRepository.addHistoryItem(newSource)
+            addCaffeine(amount)
+        }
+    }
+
+    fun removeCaffeineSource(source: CaffeineSource) {
+        viewModelScope.launch {
+            dataRepository.removeHistoryItem(source)
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
