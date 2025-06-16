@@ -54,25 +54,9 @@ const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for mos
 fun CaffeineTrackerScreen(
     caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel()
 ) {
-    // --- Sample data for the suggestion list ---
-    /*val historyList = listOf(
-        CaffeineSource("Coffee", 95),
-        CaffeineSource("Green Tea", 35),
-        CaffeineSource("Red Bull", 80),
-        CaffeineSource("Green Bull", 80),
-        CaffeineSource("Yellow Bull", 80),
-        CaffeineSource("Blue Bull", 80),
-        CaffeineSource("Grey Bull", 80),
-        CaffeineSource("Pink Bull", 80)
-    )*/
-
-    // Observe state from the ViewModel
     val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
-
     val historyList by caffeineTrackerViewModel.historyList.collectAsState()
-
     val showAddDialog = remember { mutableStateOf(false) }
-
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
@@ -442,7 +426,7 @@ fun AddNewCaffeineDialog(
     )
 }
 
-// --- Preview Function to see the UI in Android Studio ---
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
 fun DefaultPreview() {
