@@ -3,12 +3,7 @@ package com.example.caffeine_in.ui.caffeinetracker
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -35,33 +30,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlin.math.roundToInt
 
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
-
-data class CaffeineSource(
-    val name: String,
-    val amount: Int,
-)
 
 @Composable
 fun CaffeineTrackerScreen(
     caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel()
 ) {
     // --- Sample data for the suggestion list ---
-    val historyList = listOf(
+    /*val historyList = listOf(
         CaffeineSource("Coffee", 95),
         CaffeineSource("Green Tea", 35),
         CaffeineSource("Red Bull", 80),
@@ -70,10 +64,14 @@ fun CaffeineTrackerScreen(
         CaffeineSource("Blue Bull", 80),
         CaffeineSource("Grey Bull", 80),
         CaffeineSource("Pink Bull", 80)
-    )
+    )*/
 
     // Observe state from the ViewModel
     val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
+
+    val historyList by caffeineTrackerViewModel.historyList.collectAsState()
+
+    val showAddDialog = remember { mutableStateOf(false) }
 
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -152,7 +150,7 @@ fun CaffeineTrackerScreen(
 
         // --- Floating add button ---
         FloatingActionButton(
-            onClick = { /* TODO: Handle FAB click, e.g., open a dialog to add custom caffeine intake */ },
+            onClick = { showAddDialog.value = true },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
@@ -177,6 +175,16 @@ fun CaffeineTrackerScreen(
                     color = Color(0xFF38220F)
                 )
             }
+        }
+
+        if (showAddDialog.value) {
+            AddNewCaffeineDialog(
+                onDismiss = { showAddDialog.value = false },
+                onConfirm = { name, amount ->
+                    caffeineTrackerViewModel.addCaffeineSource(name, amount)
+                    showAddDialog.value = false
+                }
+            )
         }
     }
 }
@@ -334,7 +342,6 @@ fun HistoryHeader() {
     }
 }
 
-
 @Composable
 fun History(
     source: CaffeineSource,
@@ -386,6 +393,54 @@ fun History(
     }
 }
 
+@Composable
+fun AddNewCaffeineDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (name: String, amount: Int) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add New Caffeine Source") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name (e.g., Espresso Shot)") },
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = amount,
+                    onValueChange = { amount = it.filter { c -> c.isDigit() } },
+                    label = { Text("Caffeine (mg)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val amountInt = amount.toIntOrNull()
+                    if (name.isNotBlank() && amountInt != null && amountInt > 0) {
+                        onConfirm(name, amountInt)
+                    }
+                }
+            ) {
+                Text("Add")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
 
 // --- Preview Function to see the UI in Android Studio ---
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
