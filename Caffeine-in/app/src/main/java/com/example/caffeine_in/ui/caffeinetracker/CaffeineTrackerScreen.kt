@@ -3,6 +3,13 @@ package com.example.caffeine_in.ui.caffeinetracker
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -33,6 +40,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlin.math.roundToInt
@@ -173,19 +185,49 @@ fun CaffeineTrackerScreen(
 @Composable
 fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 
-    val waveSpeed: Float // 30~60
-    val waveLength: Float // 30~80
+    // desired waveSpeed and waveLength based on caffeineAmount
+    val targetWaveSpeed: Float
+    val targetWaveLength: Float
 
     if (caffeineAmount >= maxCaffeineAmount) {
-        waveSpeed = 60f
-        waveLength = 30f
+        targetWaveSpeed = 60f
+        targetWaveLength = 30f
     } else if (caffeineAmount == 0f) {
-        waveSpeed = 30f
-        waveLength = 80f
+        targetWaveSpeed = 30f
+        targetWaveLength = 80f
     } else {
-        waveSpeed = EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 30 + 30
-        waveLength = 80 - EaseInCubic.transform(caffeineAmount/maxCaffeineAmount) * 50
+        targetWaveSpeed = EaseInCubic.transform(caffeineAmount / maxCaffeineAmount) * 30 + 30
+        targetWaveLength = 80 - EaseInCubic.transform(caffeineAmount / maxCaffeineAmount) * 50
     }
+
+    // Initialize with the initial calculated values to avoid an immediate animation on first composition
+    var currentWaveSpeedForAnimation by remember { mutableFloatStateOf(targetWaveSpeed) }
+    var currentWaveLengthForAnimation by remember { mutableFloatStateOf(targetWaveLength) }
+
+    // Use LaunchedEffect to update the animation targets conditionally
+    LaunchedEffect(targetWaveSpeed) {
+        if (targetWaveSpeed > currentWaveSpeedForAnimation) {
+            currentWaveSpeedForAnimation = targetWaveSpeed
+        }
+    }
+
+    LaunchedEffect(targetWaveLength) {
+        if (targetWaveLength < currentWaveLengthForAnimation) {
+            currentWaveLengthForAnimation = targetWaveLength
+        }
+    }
+
+    val animatedWaveSpeed by animateFloatAsState(
+        targetValue = currentWaveSpeedForAnimation,
+        animationSpec = tween(easing = LinearEasing),
+        label = "WaveSpeedAnimation"
+    )
+
+    val animatedWaveLength by animateFloatAsState(
+        targetValue = currentWaveLengthForAnimation,
+        animationSpec = tween(easing = LinearEasing),
+        label = "WaveLengthAnimation"
+    )
 
     /*val targetFontSize = when {
         caffeineAmount.roundToInt() < 1000 -> 80.sp
@@ -271,8 +313,8 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         LinearWavyProgressIndicator(
             progress = { animatedProgress },
             amplitude = { 1f },
-            waveSpeed = waveSpeed.dp,
-            wavelength = waveLength.dp,
+            waveSpeed = animatedWaveSpeed.dp,
+            wavelength = animatedWaveLength.dp,
             color = Color(0xFF967259),
             modifier = Modifier.fillMaxWidth()
         )
