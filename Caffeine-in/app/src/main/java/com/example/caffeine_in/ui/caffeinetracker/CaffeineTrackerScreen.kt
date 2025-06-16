@@ -200,11 +200,11 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         targetWaveLength = 80 - EaseInCubic.transform(caffeineAmount / maxCaffeineAmount) * 50
     }
 
-    // Initialize with the initial calculated values to avoid an immediate animation on first composition
+    // initialize with the initial calculated values
     var currentWaveSpeedForAnimation by remember { mutableFloatStateOf(targetWaveSpeed) }
     var currentWaveLengthForAnimation by remember { mutableFloatStateOf(targetWaveLength) }
 
-    // Use LaunchedEffect to update the animation targets conditionally
+    // if adds
     LaunchedEffect(targetWaveSpeed) {
         if (targetWaveSpeed > currentWaveSpeedForAnimation) {
             currentWaveSpeedForAnimation = targetWaveSpeed
