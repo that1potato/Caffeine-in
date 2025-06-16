@@ -15,7 +15,7 @@ import kotlin.math.pow
 
 const val CAFFEINE_HALF_LIFE_HOURS_VM = 5.0 // caffeine's half life is about 5hrs on average
 const val CAFFEINE_HALF_LIFE_MILLIS_VM = CAFFEINE_HALF_LIFE_HOURS_VM * 60 * 60 * 1000
-const val DELAY_INTERVAL = 7000L // 7sec
+const val DELAY_INTERVAL = 2000L // 2sec
 
 class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(application) {
 
