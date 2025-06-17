@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
@@ -104,7 +105,6 @@ fun CaffeineTrackerScreen(
                 Row(
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    Spacer(modifier = Modifier.width(16.dp))
                     HistoryHeader()
                 }
                 LazyColumn(
@@ -316,13 +316,33 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 
 @Composable
 fun HistoryHeader() {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = "History",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF38220F)
         )
+        Spacer(Modifier.weight(1f))
+        // edit button
+        Button(
+            onClick = { /* TODO */ },
+            modifier = Modifier.size(30.dp),
+            shape = RoundedCornerShape(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Edit,
+                contentDescription = "Edit",
+                tint = Color(0xFF38220F)
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
@@ -365,7 +385,7 @@ fun History(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.size(48.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
-                contentPadding = PaddingValues(horizontal = 0.dp)
+                contentPadding = PaddingValues(0.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
