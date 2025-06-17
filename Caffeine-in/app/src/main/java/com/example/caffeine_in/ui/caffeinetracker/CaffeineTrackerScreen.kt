@@ -1,5 +1,7 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
@@ -28,6 +30,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,6 +46,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asComposeRenderEffect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
@@ -133,33 +141,10 @@ fun CaffeineTrackerScreen(
         }
 
         // --- Floating add button ---
-        FloatingActionButton(
-            onClick = { showAddDialog.value = true },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(16.dp),
-            shape = RoundedCornerShape(50.dp),
-            containerColor = Color(0xFFE57825)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Caffeine",
-                    tint = Color(0xFF38220F)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "New Caffeine Source",
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF38220F)
-                )
-            }
-        }
+        NewSourceFAB(Modifier
+            .align(Alignment.BottomCenter),
+            onClick = { showAddDialog.value = true }
+        )
 
         if (showAddDialog.value) {
             AddNewCaffeineDialog(
@@ -391,6 +376,96 @@ fun History(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
                     tint = Color(0xFFECE0D1)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NewSourceFAB(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier
+            .navigationBarsPadding()
+            .padding(16.dp),
+        shape = RoundedCornerShape(50.dp),
+        containerColor = Color(0xFFE57825)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "Add Caffeine",
+                tint = Color(0xFF38220F)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "New Caffeine Source",
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF38220F)
+            )
+        }
+    }
+}
+
+@Composable
+fun TransparentNewSourceFAB(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val fabShape = RoundedCornerShape(50.dp)
+    val blurRadius = 30.dp
+
+    Box(
+        modifier = modifier
+            .clip(fabShape)
+    ) {
+        // --- Back-drop blur layer ---
+        Box(
+            Modifier
+                .matchParentSize()
+                .blur( // blur whatever is behind the Box
+                    radius = blurRadius,
+                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                )
+                .background(                 // subtle frosted overlay tint
+                    Color.White.copy(alpha = .15f)
+                )
+                .border(                     // faint white outline like real glass
+                    1.dp,
+                    Color.White.copy(alpha = .35f),
+                    fabShape
+                )
+        )
+
+        FloatingActionButton(
+            onClick = onClick,
+            containerColor = Color(0xFFE57825),
+            shape = fabShape,
+            modifier = Modifier.matchParentSize()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add Caffeine",
+                    tint = Color(0xFF38220F)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "New Caffeine Source",
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF38220F)
                 )
             }
         }
