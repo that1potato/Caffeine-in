@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
+import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 import kotlin.math.roundToInt
 
 const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
@@ -421,16 +422,36 @@ fun AddNewCaffeineDialog(
     var name by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color(0xFF38220F),
+        unfocusedTextColor = Color(0xFF38220F),
+        focusedContainerColor = Color(0xFFECE0D1),
+        unfocusedBorderColor = Color(0xFF967259),
+        focusedBorderColor = Color(0xFF967259),
+        unfocusedLabelColor = Color(0xFF967259),
+        focusedLabelColor = Color(0xFF38220F),
+    )
+
     AlertDialog(
+        containerColor = Color(0xFFECE0D1),
         onDismissRequest = onDismiss,
-        title = { Text("Add New Caffeine Source") },
+        title = {
+            Text(
+                text = "New Caffeine Source",
+                color = Color(0xFF38220F),
+                fontSize = 20.sp,
+                fontFamily = FiraCodeFontFamily,
+                fontWeight = FontWeight.SemiBold
+            )
+        },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name (e.g., Espresso Shot)") },
-                    singleLine = true
+                    label = { Text("Name (e.g. Espresso Shot)") },
+                    singleLine = true,
+                    colors = textFieldColors
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
@@ -438,7 +459,8 @@ fun AddNewCaffeineDialog(
                     onValueChange = { amount = it.filter { c -> c.isDigit() } },
                     label = { Text("Caffeine (mg)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
+                    singleLine = true,
+                    colors = textFieldColors
                 )
             }
         },
@@ -449,14 +471,21 @@ fun AddNewCaffeineDialog(
                     if (name.isNotBlank() && amountInt != null && amountInt > 0) {
                         onConfirm(name, amountInt)
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F))
             ) {
-                Text("Add")
+                Text(
+                    text = "Add",
+                    color = Color(0xFFECE0D1)
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(
+                    text = "Cancel",
+                    color = Color(0xFF38220F)
+                )
             }
         }
     )
