@@ -50,7 +50,7 @@ import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 import kotlin.math.roundToInt
 
-const val maxCaffeineAmount = 400 // 400mg caffeine intake a day is safe for most adults
+const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
 
 @Composable
 fun CaffeineTrackerScreen(
@@ -159,15 +159,15 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
     val targetWaveSpeed: Float
     val targetWaveLength: Float
 
-    if (caffeineAmount >= maxCaffeineAmount) {
+    if (caffeineAmount >= MAX_CAFFEINE_AMOUNT) {
         targetWaveSpeed = 60f
         targetWaveLength = 30f
     } else if (caffeineAmount == 0f) {
         targetWaveSpeed = 30f
         targetWaveLength = 80f
     } else {
-        targetWaveSpeed = EaseInCubic.transform(caffeineAmount / maxCaffeineAmount) * 30 + 30
-        targetWaveLength = 80 - EaseInCubic.transform(caffeineAmount / maxCaffeineAmount) * 50
+        targetWaveSpeed = EaseInCubic.transform(caffeineAmount / MAX_CAFFEINE_AMOUNT) * 30 + 30
+        targetWaveLength = 80 - EaseInCubic.transform(caffeineAmount / MAX_CAFFEINE_AMOUNT) * 50
     }
 
     // initialize with the initial calculated values
