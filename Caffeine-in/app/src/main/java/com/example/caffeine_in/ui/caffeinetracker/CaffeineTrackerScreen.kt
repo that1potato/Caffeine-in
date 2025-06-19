@@ -33,6 +33,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -64,6 +66,8 @@ fun CaffeineTrackerScreen(
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
         label = "ProgressAnimation"
     )
+    
+    var isEditMode by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -106,7 +110,10 @@ fun CaffeineTrackerScreen(
                 Row(
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    HistoryHeader()
+                    HistoryHeader(
+                        isEditMode = isEditMode,
+                        onEditClick = { isEditMode = !isEditMode }
+                    )
                 }
                 LazyColumn(
                     modifier = Modifier.padding(
@@ -120,8 +127,12 @@ fun CaffeineTrackerScreen(
                     items(historyList) { source ->
                         History(
                             source = source,
+                            isEditMode = isEditMode,
                             onAddCaffeine = { amount ->
                                 caffeineTrackerViewModel.addCaffeine(amount)
+                            },
+                            onDeleteSource = { sourceToDelete ->
+                                caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
                             }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -299,7 +310,10 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 }
 
 @Composable
-fun HistoryHeader() {
+fun HistoryHeader(
+    isEditMode: Boolean,
+    onEditClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -314,15 +328,15 @@ fun HistoryHeader() {
         Spacer(Modifier.weight(1f))
         // edit button
         Button(
-            onClick = { /* TODO */ },
+            onClick = onEditClick,
             modifier = Modifier.size(30.dp),
             shape = RoundedCornerShape(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
             contentPadding = PaddingValues(0.dp)
         ) {
             Icon(
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Edit",
+                imageVector = if (isEditMode) Icons.Filled.Check else Icons.Filled.Edit, // <-- MODIFY THIS LINE
+                contentDescription = if (isEditMode) "Done" else "Edit",
                 tint = Color(0xFF38220F)
             )
         }
@@ -333,7 +347,9 @@ fun HistoryHeader() {
 @Composable
 fun History(
     source: CaffeineSource,
-    onAddCaffeine: (Int) -> Unit
+    isEditMode: Boolean,
+    onAddCaffeine: (Int) -> Unit,
+    onDeleteSource: (CaffeineSource) -> Unit
 ) {
     // --- Card for each suggestion item for a subtle background and shape ---
     Card(
@@ -363,19 +379,37 @@ fun History(
                 )
             }
 
-            // --- Add Button ---
-            Button(
-                onClick = { onAddCaffeine(source.amount) },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.size(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add",
-                    tint = Color(0xFFECE0D1)
-                )
+            // --- Add/Delete Button ---
+            if (isEditMode) {
+                // Delete Button
+                Button(
+                    onClick = { onDeleteSource(source) },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.size(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)), // TODO: color adjustment
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.DeleteForever,
+                        contentDescription = "Delete",
+                        tint = Color(0xFFECE0D1)
+                    )
+                }
+            } else {
+                // Your existing Add Button
+                Button(
+                    onClick = { onAddCaffeine(source.amount) },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.size(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add",
+                        tint = Color(0xFFECE0D1)
+                    )
+                }
             }
         }
     }
