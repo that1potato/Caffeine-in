@@ -189,13 +189,19 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 
     val animatedWaveSpeed by animateFloatAsState(
         targetValue = currentWaveSpeedForAnimation,
-        animationSpec = tween(easing = LinearEasing),
+        animationSpec = tween(
+            //durationMillis = 450,
+            easing = LinearEasing
+        ),
         label = "WaveSpeedAnimation"
     )
 
     val animatedWaveLength by animateFloatAsState(
         targetValue = currentWaveLengthForAnimation,
-        animationSpec = tween(easing = LinearEasing),
+        animationSpec = tween(
+            //durationMillis = 450,
+            easing = LinearEasing
+        ),
         label = "WaveLengthAnimation"
     )
 
@@ -234,7 +240,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = { /* Handle specific item add */ },
+                    onClick = { /* TODO */ },
                     modifier = Modifier.size(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF967259)),
                     contentPadding = PaddingValues(horizontal = 0.dp)
