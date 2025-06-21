@@ -40,7 +40,6 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     private val _historyList = MutableStateFlow<List<CaffeineSource>>(emptyList())
     val historyList: StateFlow<List<CaffeineSource>> = _historyList.asStateFlow()
 
-
     init {
         // preload showcase data
         viewModelScope.launch {
@@ -178,6 +177,11 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             dataRepository.addHistoryItem(newSource)
             addCaffeine(amount)
         }
+    }
+    
+    suspend fun updateCaffeineSource(oldSource: CaffeineSource, newName: String, newAmount: Int): Boolean {
+        if (newName.isBlank() || newAmount <= 0) return false
+        return dataRepository.updateHistoryItem(oldSource, newName, newAmount)
     }
 
     fun removeCaffeineSource(source: CaffeineSource) {

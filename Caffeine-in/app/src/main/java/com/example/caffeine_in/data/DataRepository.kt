@@ -95,4 +95,32 @@ class DataRepository(private val context: Context) {
             preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(currentList)
         }
     }
+    
+    suspend fun updateHistoryItem(oldSource: CaffeineSource, newName: String, newAmount: Int): Boolean {
+        var updated = false
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[PreferencesKeys.HISTORY_LIST] ?: "[]"
+            val currentList = Json.decodeFromString<MutableList<CaffeineSource>>(jsonString)
+            
+            // if new name already exists
+            val nameExists = currentList.any {
+                it.name.equals(newName, ignoreCase = true) && it.name != oldSource.name
+            }
+            
+            if (nameExists) {
+                updated = false // Name already exists, do not proceed.
+            } else {
+                // update
+                val itemIndex = currentList.indexOfFirst { it.name == oldSource.name }
+                if (itemIndex != -1) {
+                    currentList[itemIndex] = oldSource.copy(name = newName, amount = newAmount)
+                    preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(currentList)
+                    updated = true
+                } else {
+                    updated = false // not found, should not happen
+                }
+            }
+        }
+        return updated
+    }
 }
