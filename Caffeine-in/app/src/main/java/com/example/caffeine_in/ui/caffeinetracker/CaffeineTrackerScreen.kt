@@ -537,7 +537,6 @@ fun AddNewCaffeineDialog(
                 text = "New Caffeine Source",
                 color = Color(0xFF38220F),
                 fontSize = 20.sp,
-                fontFamily = FiraCodeFontFamily,
                 fontWeight = FontWeight.SemiBold
             )
         },
@@ -614,7 +613,14 @@ fun EditCaffeineDialog(
     AlertDialog(
         containerColor = Color(0xFFECE0D1),
         onDismissRequest = onDismiss,
-        title = { Text("Edit Caffeine Source", color = Color(0xFF38220F)) },
+        title = {
+            Text(
+                text = "Edit Caffeine Source",
+                color = Color(0xFF38220F),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        },
         text = {
             Column {
                 if (showError) {
