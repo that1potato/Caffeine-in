@@ -94,7 +94,7 @@ fun CaffeineTrackerScreen(
                 .statusBarsPadding(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            // --- "Today's" Section ---
+            // --- Today's Section ---
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -113,7 +113,7 @@ fun CaffeineTrackerScreen(
                 }
             }
 
-            // --- history card ---
+            // --- history Section ---
             Column {
                 Row(
                     horizontalArrangement = Arrangement.Start
