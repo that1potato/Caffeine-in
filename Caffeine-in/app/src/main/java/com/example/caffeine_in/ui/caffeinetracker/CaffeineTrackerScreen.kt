@@ -1,12 +1,15 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -34,6 +37,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
@@ -334,11 +338,19 @@ fun HistoryHeader(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
             contentPadding = PaddingValues(0.dp)
         ) {
-            Icon(
-                imageVector = if (isEditMode) Icons.Filled.Check else Icons.Filled.Edit, // <-- MODIFY THIS LINE
-                contentDescription = if (isEditMode) "Done" else "Edit",
-                tint = Color(0xFF38220F)
-            )
+            AnimatedContent(
+                targetState = isEditMode,
+                transitionSpec = {
+                    (scaleIn() + fadeIn()) togetherWith (scaleOut() + fadeOut())
+                },
+                label = "EditButtonIconAnimation"
+            ) { targetState ->
+                Icon(
+                    imageVector = if (targetState) Icons.Filled.Check else Icons.Filled.Edit,
+                    contentDescription = if (targetState) "Done" else "Edit",
+                    tint = Color(0xFF38220F)
+                )
+            }
         }
         Spacer(modifier = Modifier.width(16.dp))
     }
@@ -351,6 +363,11 @@ fun History(
     onAddCaffeine: (Int) -> Unit,
     onDeleteSource: (CaffeineSource) -> Unit
 ) {
+    val buttonColor by animateColorAsState(
+        targetValue = if (isEditMode) Color(0xFFE53935) else Color(0xFF38220F),
+        label = "HistoryButtonColorAnimation"
+    )
+    
     // --- Card for each suggestion item for a subtle background and shape ---
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -380,35 +397,41 @@ fun History(
             }
 
             // --- Add/Delete Button ---
-            if (isEditMode) {
-                // Delete Button
-                Button(
-                    onClick = { onDeleteSource(source) },
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.size(48.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935)), // TODO: color adjustment
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.DeleteForever,
-                        contentDescription = "Delete",
-                        tint = Color(0xFFECE0D1)
-                    )
-                }
-            } else {
-                // Your existing Add Button
-                Button(
-                    onClick = { onAddCaffeine(source.amount) },
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.size(48.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add",
-                        tint = Color(0xFFECE0D1)
-                    )
+            Button(
+                onClick = {
+                    if (isEditMode) {
+                        onDeleteSource(source)
+                    } else {
+                        onAddCaffeine(source.amount)
+                    }
+                },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.size(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = buttonColor // Use the animated color here
+                ),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                AnimatedContent(
+                    targetState = isEditMode,
+                    transitionSpec = {
+                        (scaleIn() + fadeIn()) togetherWith (scaleOut() + fadeOut())
+                    },
+                    label = "HistoryButtonIconAnimation"
+                ) { targetState ->
+                    if (targetState) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            tint = Color(0xFFECE0D1)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add",
+                            tint = Color(0xFFECE0D1)
+                        )
+                    }
                 }
             }
         }
