@@ -75,7 +75,6 @@ fun CaffeineTrackerScreen(
     
     var isEditMode by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
-    val scope = rememberCoroutineScope()
     
     Box(
         modifier = Modifier
