@@ -399,7 +399,6 @@ fun History(
         label = "HistoryButtonColorAnimation"
     )
     
-    // --- Card for each suggestion item for a subtle background and shape ---
     Card(
         modifier = Modifier
             .fillMaxWidth()
