@@ -31,13 +31,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
@@ -48,12 +48,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
@@ -72,7 +74,9 @@ fun CaffeineTrackerScreen(
     )
     
     var isEditMode by remember { mutableStateOf(false) }
-
+    var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
+    val scope = rememberCoroutineScope()
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -128,7 +132,10 @@ fun CaffeineTrackerScreen(
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(historyList) { source ->
+                    items(
+                        historyList,
+                        key = { it.name }
+                    ) { source ->
                         History(
                             source = source,
                             isEditMode = isEditMode,
@@ -137,6 +144,9 @@ fun CaffeineTrackerScreen(
                             },
                             onDeleteSource = { sourceToDelete ->
                                 caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
+                            },
+                            onEditClick = { item ->
+                                itemToEdit = item
                             }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
@@ -154,12 +164,32 @@ fun CaffeineTrackerScreen(
             onClick = { showAddDialog.value = true }
         )
 
+        // ---- add dialog ----
         if (showAddDialog.value) {
             AddNewCaffeineDialog(
                 onDismiss = { showAddDialog.value = false },
                 onConfirm = { name, amount ->
                     caffeineTrackerViewModel.addCaffeineSource(name, amount)
                     showAddDialog.value = false
+                }
+            )
+        }
+        
+        // ---- edit dialog ----
+        itemToEdit?.let { currentItem ->
+            EditCaffeineDialog(
+                item = currentItem,
+                onDismiss = { itemToEdit = null },
+                onConfirm = { newName, newAmount ->
+                    val updated = caffeineTrackerViewModel.updateCaffeineSource(
+                        oldSource = currentItem,
+                        newName = newName,
+                        newAmount = newAmount
+                    )
+                    if (updated) {
+                        itemToEdit = null // Dismiss dialog on success
+                    }
+                    updated
                 }
             )
         }
@@ -361,7 +391,8 @@ fun History(
     source: CaffeineSource,
     isEditMode: Boolean,
     onAddCaffeine: (Int) -> Unit,
-    onDeleteSource: (CaffeineSource) -> Unit
+    onDeleteSource: (CaffeineSource) -> Unit,
+    onEditClick: (CaffeineSource) -> Unit
 ) {
     val buttonColor by animateColorAsState(
         targetValue = if (isEditMode) Color(0xFFE53935) else Color(0xFF38220F),
@@ -370,7 +401,12 @@ fun History(
     
     // --- Card for each suggestion item for a subtle background and shape ---
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                enabled = isEditMode, // clickable in edit mode
+                onClick = { onEditClick(source) }
+            ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
         border = BorderStroke(width = 1.dp, color = Color(0xFF967259))
@@ -421,7 +457,7 @@ fun History(
                 ) { targetState ->
                     if (targetState) {
                         Icon(
-                            imageVector = Icons.Filled.Delete,
+                            imageVector = Icons.Filled.DeleteForever,
                             contentDescription = "Delete",
                             tint = Color(0xFFECE0D1)
                         )
@@ -549,6 +585,90 @@ fun AddNewCaffeineDialog(
                     text = "Cancel",
                     color = Color(0xFF38220F)
                 )
+            }
+        }
+    )
+}
+
+@Composable
+fun EditCaffeineDialog(
+    item: CaffeineSource,
+    onDismiss: () -> Unit,
+    onConfirm: suspend (newName: String, newAmount: Int) -> Boolean // Returns true on success
+) {
+    var name by remember { mutableStateOf(item.name) }
+    var amount by remember { mutableStateOf(item.amount.toString()) }
+    var showError by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = Color(0xFF38220F),
+        unfocusedTextColor = Color(0xFF38220F),
+        focusedContainerColor = Color(0xFFECE0D1),
+        unfocusedBorderColor = Color(0xFF967259),
+        focusedBorderColor = Color(0xFF967259),
+        unfocusedLabelColor = Color(0xFF967259),
+        focusedLabelColor = Color(0xFF38220F),
+        errorBorderColor = Color.Red,
+        errorLabelColor = Color.Red
+    )
+    
+    AlertDialog(
+        containerColor = Color(0xFFECE0D1),
+        onDismissRequest = onDismiss,
+        title = { Text("Edit Caffeine Source", color = Color(0xFF38220F)) },
+        text = {
+            Column {
+                if (showError) {
+                    Text("An item with this name already exists.", color = Color.Red)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = {
+                        name = it
+                        showError = false // Hide error on new input
+                    },
+                    label = { Text("Name") },
+                    singleLine = true,
+                    colors = textFieldColors,
+                    isError = showError
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = amount,
+                    onValueChange = {
+                        amount = it.filter { c -> c.isDigit() }
+                        showError = false
+                    },
+                    label = { Text("Caffeine (mg)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    colors = textFieldColors
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val amountInt = amount.toIntOrNull()
+                    if (name.isNotBlank() && amountInt != null && amountInt > 0) {
+                        scope.launch {
+                            val success = onConfirm(name, amountInt)
+                            if (!success) {
+                                showError = true
+                            }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F))
+            ) {
+                Text("Save", color = Color(0xFFECE0D1))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color(0xFF38220F))
             }
         }
     )
