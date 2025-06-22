@@ -2,6 +2,7 @@ package com.example.caffeine_in.ui.caffeinetracker
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.EaseInCubic
 import androidx.compose.animation.core.LinearEasing
@@ -121,7 +122,7 @@ fun CaffeineTrackerScreen(
             }
 
             // --- history Section ---
-            Column {
+            Column(modifier = Modifier.animateContentSize()) {
                 Row(
                     horizontalArrangement = Arrangement.Start
                 ) {
@@ -208,7 +209,7 @@ fun CaffeineTrackerScreen(
 }
 
 @Composable
-fun TopBar(
+fun TopBar( // TODO
     modifier: Modifier
 ) {
     Row(
