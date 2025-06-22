@@ -37,10 +37,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -54,7 +56,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
-import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -93,6 +94,13 @@ fun CaffeineTrackerScreen(
                 .statusBarsPadding(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
+            // --- Top Bar ---
+            /*TopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
+            )*/
+            
             // --- Today's Section ---
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,20 +143,24 @@ fun CaffeineTrackerScreen(
                         historyList,
                         key = { it.name }
                     ) { source ->
-                        History(
-                            source = source,
-                            isEditMode = isEditMode,
-                            onAddCaffeine = { amount ->
-                                caffeineTrackerViewModel.addCaffeine(amount)
-                            },
-                            onDeleteSource = { sourceToDelete ->
-                                caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
-                            },
-                            onEditClick = { item ->
-                                itemToEdit = item
-                            }
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Column(
+                            modifier = Modifier.animateItem()
+                        ) {
+                            History(
+                                source = source,
+                                isEditMode = isEditMode,
+                                onAddCaffeine = { amount ->
+                                    caffeineTrackerViewModel.addCaffeine(amount)
+                                },
+                                onDeleteSource = { sourceToDelete ->
+                                    caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
+                                },
+                                onEditClick = { item ->
+                                    itemToEdit = item
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                     }
                     item {
                         Spacer(modifier = Modifier.height(96.dp))
@@ -191,6 +203,27 @@ fun CaffeineTrackerScreen(
                     updated
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun TopBar(
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            onClick = { /*TODO*/ },
+        ) {
+            Icons.Filled.AutoGraph
+        }
+        Button(
+            onClick = { /*TODO*/ },
+        ) {
+            Icons.Filled.Settings
         }
     }
 }
