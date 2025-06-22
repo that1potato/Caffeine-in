@@ -41,22 +41,23 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     val historyList: StateFlow<List<CaffeineSource>> = _historyList.asStateFlow()
 
     init {
-        // preload showcase data
+        // preload showcase data if empty && first time launching
         viewModelScope.launch {
+            val hasBeenLaunchedBefore = dataRepository.hasBeenLaunchedBeforeFlow.first()
             val isHistoryEmpty = dataRepository.historyListFlow.first().isEmpty()
-
-            if (isHistoryEmpty) {
+            
+            // Check if the app has been launched before.
+            if (!hasBeenLaunchedBefore && isHistoryEmpty) {
                 val initialList = listOf(
                     CaffeineSource("Coffee", 95),
                     CaffeineSource("Green Tea", 35),
                     CaffeineSource("Red Bull", 80),
-                    CaffeineSource("Green Bull", 80),
-                    CaffeineSource("Yellow Bull", 80),
-                    CaffeineSource("Blue Bull", 80),
                     CaffeineSource("Grey Bull", 80),
                     CaffeineSource("Pink Bull", 80)
                 )
+                
                 dataRepository.setHistoryList(initialList)
+                dataRepository.setHasBeenLaunchedBefore()
             }
         }
 
