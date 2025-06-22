@@ -78,6 +78,13 @@ fun CaffeineTrackerScreen(
     var isEditMode by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
     
+    LaunchedEffect(historyList) {
+        // automatically exit edit mode if the last item is deleted
+        if (historyList.isEmpty()) {
+            isEditMode = false
+        }
+    }
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -127,6 +134,7 @@ fun CaffeineTrackerScreen(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     HistoryHeader(
+                        buttonEnabled = historyList.isNotEmpty(),
                         isEditMode = isEditMode,
                         onEditClick = { isEditMode = !isEditMode }
                     )
@@ -140,27 +148,44 @@ fun CaffeineTrackerScreen(
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(
-                        historyList,
-                        key = { it.name }
-                    ) { source ->
-                        Column(
-                            modifier = Modifier.animateItem()
-                        ) {
-                            History(
-                                source = source,
-                                isEditMode = isEditMode,
-                                onAddCaffeine = { amount ->
-                                    caffeineTrackerViewModel.addCaffeine(amount)
-                                },
-                                onDeleteSource = { sourceToDelete ->
-                                    caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
-                                },
-                                onEditClick = { item ->
-                                    itemToEdit = item
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
+                    if (historyList.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .height(48.dp)
+                                    .animateItem(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Add your first caffeine source to get started.",
+                                    color = Color(0xFF967259),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    } else {
+                        items(
+                            historyList,
+                            key = { it.name }
+                        ) { source ->
+                            Column(
+                                modifier = Modifier.animateItem()
+                            ) {
+                                History(
+                                    source = source,
+                                    isEditMode = isEditMode,
+                                    onAddCaffeine = { amount ->
+                                        caffeineTrackerViewModel.addCaffeine(amount)
+                                    },
+                                    onDeleteSource = { sourceToDelete ->
+                                        caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
+                                    },
+                                    onEditClick = { item ->
+                                        itemToEdit = item
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                            }
                         }
                     }
                     item {
@@ -378,6 +403,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
 
 @Composable
 fun HistoryHeader(
+    buttonEnabled: Boolean,
     isEditMode: Boolean,
     onEditClick: () -> Unit
 ) {
@@ -396,6 +422,7 @@ fun HistoryHeader(
         // edit button
         Button(
             onClick = onEditClick,
+            enabled = buttonEnabled,
             modifier = Modifier.size(30.dp),
             shape = RoundedCornerShape(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
