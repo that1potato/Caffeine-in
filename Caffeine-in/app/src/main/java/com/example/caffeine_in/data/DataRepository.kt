@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -24,6 +25,7 @@ class DataRepository(private val context: Context) {
         val INITIAL_CAFFEINE_MG = floatPreferencesKey("initial_caffeine_mg")
         val LAST_INGESTION_TIME_MILLIS = longPreferencesKey("last_ingestion_time_millis")
         val HISTORY_LIST = stringPreferencesKey("caffeine_history_list")
+        val APP_HAS_BEEN_LAUNCHED_BEFORE = booleanPreferencesKey("app_has_been_launched_before")
     }
 
     // caffeine decay calculation state
@@ -40,6 +42,20 @@ class DataRepository(private val context: Context) {
             val lastIngestion = preferences[PreferencesKeys.LAST_INGESTION_TIME_MILLIS] ?: 0L
             Pair(initialMg, lastIngestion)
         }
+    
+    // if app has been launched before
+    val hasBeenLaunchedBeforeFlow: Flow<Boolean> = context.dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            // It will default to 'false' if it has never been set.
+            preferences[PreferencesKeys.APP_HAS_BEEN_LAUNCHED_BEFORE] ?: false
+        }
 
     // caffeine source list
     val historyListFlow: Flow<List<CaffeineSource>> = context.dataStore.data
@@ -53,8 +69,14 @@ class DataRepository(private val context: Context) {
             val jsonString = preferences[PreferencesKeys.HISTORY_LIST] ?: "[]"
             Json.decodeFromString<List<CaffeineSource>>(jsonString)
         }
+    
+    suspend fun setHasBeenLaunchedBefore() {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.APP_HAS_BEEN_LAUNCHED_BEFORE] = true
+        }
+    }
 
-    // TODO: for debug use only
+    // called on the first time the app launches
     suspend fun setHistoryList(historyList: List<CaffeineSource>) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(historyList)
