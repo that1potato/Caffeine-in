@@ -49,7 +49,7 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             // Check if the app has been launched before.
             if (!hasBeenLaunchedBefore && isHistoryEmpty) {
                 val initialList = listOf(
-                    CaffeineSource("Coffee", 95),
+                    CaffeineSource("1 Espresso Shot", 64),
                     CaffeineSource("Green Tea", 35),
                     CaffeineSource("Red Bull", 80),
                     CaffeineSource("Grey Bull", 80),
