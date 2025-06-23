@@ -38,13 +38,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.AutoGraph
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -88,122 +87,126 @@ fun CaffeineTrackerScreen(
     
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(Color(0xFFECE0D1))
     ) {
-        // ---- Top Bar ----
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(24.dp)
-                .statusBarsPadding()
-        ) {
-        
-        }
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxHeight()
                 .padding(
                     top = 16.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 0.dp
-                ),
-                //.statusBarsPadding(),
-            verticalArrangement = Arrangement.SpaceEvenly
+                )
+                .statusBarsPadding()
         ) {
-            // --- Today's Section ---
+            // ---- Top Bar ----
+            TopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+            )
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                LazyColumn(
-                    modifier = Modifier.padding(24.dp),
+                // --- Today's Section ---
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    item {
-                        TodaysTotalSection(
-                            animatedProgress = animatedProgress,
-                            caffeineAmount = displayedCaffeineMg
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
-                    }
-                }
-            }
-
-            // --- history Section ---
-            Column(modifier = Modifier.animateContentSize()) {
-                Row(
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    HistoryHeader(
-                        buttonEnabled = historyList.isNotEmpty(),
-                        isEditMode = isEditMode,
-                        onEditClick = { isEditMode = !isEditMode }
-                    )
-                }
-                LazyColumn(
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 0.dp
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (historyList.isEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
                         item {
-                            Box(
-                                modifier = Modifier
-                                    .height(48.dp)
-                                    .animateItem(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Add your first caffeine source to get started.",
-                                    color = Color(0xFF967259),
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                        }
-                    } else {
-                        items(
-                            historyList,
-                            key = { it.name }
-                        ) { source ->
-                            Column(
-                                modifier = Modifier.animateItem()
-                            ) {
-                                History(
-                                    source = source,
-                                    isEditMode = isEditMode,
-                                    onAddCaffeine = { amount ->
-                                        caffeineTrackerViewModel.addCaffeine(amount)
-                                    },
-                                    onDeleteSource = { sourceToDelete ->
-                                        caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
-                                    },
-                                    onEditClick = { item ->
-                                        itemToEdit = item
-                                    }
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                            }
+                            TodaysTotalSection(
+                                animatedProgress = animatedProgress,
+                                caffeineAmount = displayedCaffeineMg
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
                         }
                     }
-                    item {
-                        Spacer(modifier = Modifier.height(96.dp))
+                }
+                
+                // --- history Section ---
+                Column(modifier = Modifier.animateContentSize()) {
+                    Row(
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        HistoryHeader(
+                            buttonEnabled = historyList.isNotEmpty(),
+                            isEditMode = isEditMode,
+                            onEditClick = { isEditMode = !isEditMode }
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier.padding(
+                            top = 16.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 0.dp
+                        ),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (historyList.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .height(48.dp)
+                                        .animateItem(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "Add your first caffeine source to get started.",
+                                        color = Color(0xFF967259),
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            }
+                        } else {
+                            items(
+                                historyList,
+                                key = { it.name }
+                            ) { source ->
+                                Column(
+                                    modifier = Modifier.animateItem()
+                                ) {
+                                    History(
+                                        source = source,
+                                        isEditMode = isEditMode,
+                                        onAddCaffeine = { amount ->
+                                            caffeineTrackerViewModel.addCaffeine(amount)
+                                        },
+                                        onDeleteSource = { sourceToDelete ->
+                                            caffeineTrackerViewModel.removeCaffeineSource(
+                                                sourceToDelete
+                                            )
+                                        },
+                                        onEditClick = { item ->
+                                            itemToEdit = item
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                }
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(96.dp))
+                        }
                     }
                 }
             }
         }
-
         // --- Floating add button ---
-        NewSourceFAB(Modifier
-            .align(Alignment.BottomCenter),
+        NewSourceFAB(
+            Modifier
+                .align(Alignment.BottomCenter),
             onClick = { showAddDialog.value = true }
         )
-
+        
         // ---- add dialog ----
         if (showAddDialog.value) {
             AddNewCaffeineDialog(
@@ -240,19 +243,38 @@ fun CaffeineTrackerScreen(
 fun TopBar( // TODO
     modifier: Modifier
 ) {
+    val buttonColor = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1))
+    val iconColor = Color(0xFF38220F)
+    val iconModifier = Modifier.size(20.dp)
+    
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
             onClick = { /*TODO*/ },
+            colors = buttonColor,
+            contentPadding = PaddingValues(0.dp),
         ) {
-            Icons.Filled.AutoGraph
+            Icon(
+                imageVector = Icons.Outlined.AutoGraph,
+                contentDescription = "Log",
+                tint = iconColor,
+                modifier = iconModifier
+            )
         }
+        Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { /*TODO*/ },
+            colors = buttonColor,
+            contentPadding = PaddingValues(0.dp),
         ) {
-            Icons.Filled.Settings
+            Icon(
+                imageVector = Icons.Outlined.Settings,
+                contentDescription = "Log",
+                tint = iconColor,
+                modifier = iconModifier
+            )
         }
     }
 }
