@@ -44,6 +44,7 @@ import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -90,6 +91,15 @@ fun CaffeineTrackerScreen(
             .fillMaxSize()
             .background(Color(0xFFECE0D1))
     ) {
+        // ---- Top Bar ----
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp)
+                .statusBarsPadding()
+        ) {
+        
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -98,17 +108,10 @@ fun CaffeineTrackerScreen(
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 0.dp
-                )
-                .statusBarsPadding(),
+                ),
+                //.statusBarsPadding(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            // --- Top Bar ---
-            /*TopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            )*/
-            
             // --- Today's Section ---
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -326,9 +329,11 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         modifier = Modifier.width(IntrinsicSize.Max)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
+        Button(
+            onClick = { /* TODO */ },
+            //modifier = Modifier.size(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
+            contentPadding = PaddingValues(horizontal = 0.dp)
         ) {
             Row(
                 modifier = Modifier.padding(4.dp),
@@ -342,18 +347,12 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = { /* TODO */ },
-                    modifier = Modifier.size(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF967259)),
-                    contentPadding = PaddingValues(horizontal = 0.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = "Info",
-                        tint = Color(0xFFECE0D1)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = "Info",
+                    tint = Color(0xFF967259),
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
