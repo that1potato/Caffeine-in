@@ -456,7 +456,7 @@ fun HistoryHeader(
                 Icon(
                     imageVector = if (targetState) Icons.Filled.Check else Icons.Filled.Edit,
                     contentDescription = if (targetState) "Done" else "Edit",
-                    tint = Color(0xFF38220F)
+                    tint = if (buttonEnabled) Color(0xFF38220F) else Color(0xFF967259)
                 )
             }
         }
