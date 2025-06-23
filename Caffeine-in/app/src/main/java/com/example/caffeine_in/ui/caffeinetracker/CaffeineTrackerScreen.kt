@@ -114,21 +114,15 @@ fun CaffeineTrackerScreen(
             ) {
                 // --- Today's Section ---
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        item {
-                            TodaysTotalSection(
-                                animatedProgress = animatedProgress,
-                                caffeineAmount = displayedCaffeineMg
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                        }
-                    }
+                    TodaysTotalSection(
+                        animatedProgress = animatedProgress,
+                        caffeineAmount = displayedCaffeineMg
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
                 
                 // --- history Section ---
