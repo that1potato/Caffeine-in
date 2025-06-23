@@ -35,6 +35,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -94,7 +95,7 @@ fun CaffeineTrackerScreen(
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(
-                    top = 16.dp,
+                    top = 0.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 0.dp
@@ -105,7 +106,6 @@ fun CaffeineTrackerScreen(
             TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding()
             )
             Column(
                 modifier = Modifier
@@ -245,16 +245,18 @@ fun TopBar( // TODO
 ) {
     val buttonColor = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1))
     val iconColor = Color(0xFF38220F)
-    val iconModifier = Modifier.size(20.dp)
+    val iconModifier = Modifier.size(24.dp)
     
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Button(
             onClick = { /*TODO*/ },
             colors = buttonColor,
             contentPadding = PaddingValues(0.dp),
+            shape = CircleShape
         ) {
             Icon(
                 imageVector = Icons.Outlined.AutoGraph,
@@ -268,6 +270,7 @@ fun TopBar( // TODO
             onClick = { /*TODO*/ },
             colors = buttonColor,
             contentPadding = PaddingValues(0.dp),
+            shape = CircleShape
         ) {
             Icon(
                 imageVector = Icons.Outlined.Settings,
@@ -445,7 +448,7 @@ fun HistoryHeader(
             onClick = onEditClick,
             enabled = buttonEnabled,
             modifier = Modifier.size(30.dp),
-            shape = RoundedCornerShape(50.dp),
+            shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
             contentPadding = PaddingValues(0.dp)
         ) {
