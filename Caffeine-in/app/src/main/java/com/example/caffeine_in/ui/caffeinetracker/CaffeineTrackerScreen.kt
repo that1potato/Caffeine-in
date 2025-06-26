@@ -75,7 +75,7 @@ fun CaffeineTrackerScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
-    var newlyAdded by remember { mutableStateOf(false) } // when an item was just added
+    val shouldScrollToTop by caffeineTrackerViewModel.scrollToTopEvent.collectAsState()
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -86,11 +86,21 @@ fun CaffeineTrackerScreen(
     var isEditMode by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
     var snackbarJob: Job? by remember { mutableStateOf(null) }
+    var newlyAdded by remember { mutableStateOf(false) } // when an item was just added
     
+    // scroll up if new item added
     LaunchedEffect(historyList) {
         if (newlyAdded) {
             listState.animateScrollToItem(0)
             newlyAdded = false
+        }
+    }
+    
+    // also scroll up if undo index 0 deletion
+    LaunchedEffect(shouldScrollToTop) {
+        if (shouldScrollToTop) {
+            listState.animateScrollToItem(0)
+            caffeineTrackerViewModel.onScrollToTopEventConsumed()
         }
     }
     

@@ -19,6 +19,7 @@ import kotlin.math.pow
 
 const val CAFFEINE_HALF_LIFE_HOURS_VM = 5.0 // caffeine's half life is about 5hrs on average
 const val CAFFEINE_HALF_LIFE_MILLIS_VM = CAFFEINE_HALF_LIFE_HOURS_VM * 60 * 60 * 1000
+//const val CAFFEINE_HALF_LIFE_MILLIS_VM = CAFFEINE_HALF_LIFE_HOURS_VM * 30 * 1000 // for debugging
 const val DELAY_INTERVAL = 2000L // 2sec
 
 class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(application) {
@@ -45,6 +46,9 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     private val _previousLastIngestionTimeMillis = mutableLongStateOf(0L)
     
     private var lastDeletedItem: Pair<Int, CaffeineSource>? = null
+    
+    private val _scrollToTopEvent = MutableStateFlow(false)
+    val scrollToTopEvent: StateFlow<Boolean> = _scrollToTopEvent.asStateFlow()
 
     init {
         // preload showcase data if empty && first time launching
@@ -209,11 +213,18 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     
     fun undoDeleteCaffeineSource() {
         lastDeletedItem?.let { (index, source) ->
+            if (index == 0) {
+                _scrollToTopEvent.value = true
+            }
             viewModelScope.launch {
                 dataRepository.insertHistoryItem(index, source)
-                lastDeletedItem = null
+                lastDeletedItem = null // clear after undoing
             }
         }
+    }
+    
+    fun onScrollToTopEventConsumed() {
+        _scrollToTopEvent.value = false
     }
     
     suspend fun updateCaffeineSource(oldSource: CaffeineSource, newName: String, newAmount: Int): Boolean {
