@@ -92,6 +92,13 @@ fun CaffeineTrackerScreen(
     }
     
     Scaffold(
+        topBar = {
+            TopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+            )
+        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = Color(0xFFECE0D1),
         floatingActionButtonPosition = FabPosition.Center,
@@ -123,9 +130,6 @@ fun CaffeineTrackerScreen(
                         bottom = 0.dp
                     )
             ) {
-                // ---- Top Bar ----
-                TopBar(modifier = Modifier.fillMaxWidth())
-                
                 Column(
                     modifier = Modifier
                         .fillMaxHeight(),
@@ -233,12 +237,6 @@ fun CaffeineTrackerScreen(
                     }
                 }
             }
-            // --- Floating add button ---
-            /*NewSourceFAB(
-                Modifier
-                    .align(Alignment.BottomCenter),
-                onClick = { showAddDialog.value = true }
-            )*/
             
             // ---- add dialog ----
             if (showAddDialog.value) {
@@ -294,7 +292,10 @@ fun TopBar( // TODO
     val iconModifier = Modifier.size(24.dp)
     
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(
+            start = 16.dp,
+            end = 16.dp
+        ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
