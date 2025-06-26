@@ -75,6 +75,7 @@ fun CaffeineTrackerScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
+    var newlyAdded by remember { mutableStateOf(false) } // when an item was just added
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -85,6 +86,13 @@ fun CaffeineTrackerScreen(
     var isEditMode by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
     var snackbarJob: Job? by remember { mutableStateOf(null) }
+    
+    LaunchedEffect(historyList) {
+        if (newlyAdded) {
+            listState.animateScrollToItem(0)
+            newlyAdded = false
+        }
+    }
     
     LaunchedEffect(historyList) {
         // automatically exit edit mode if the last item is deleted
@@ -248,10 +256,9 @@ fun CaffeineTrackerScreen(
                     onConfirm = { name, amount ->
                         caffeineTrackerViewModel.addCaffeineSource(name, amount)
                         showAddDialog.value = false
+                        newlyAdded = true
                         snackbarJob?.cancel()
                         snackbarJob = scope.launch {
-                            listState.animateScrollToItem(index = 0) // scroll up to the top
-                            
                             val result = snackbarHostState.showSnackbar(
                                 message = "$name added and logged",
                                 actionLabel = "Undo",
@@ -490,7 +497,7 @@ fun HistoryHeader(
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = "History",
+            text = "Caffeine Sources",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF38220F)
