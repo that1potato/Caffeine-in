@@ -205,7 +205,7 @@ fun CaffeineTrackerScreen(
                                                         duration = SnackbarDuration.Long
                                                     )
                                                     if (result == SnackbarResult.ActionPerformed) {
-                                                        caffeineTrackerViewModel.reAddCaffeineSourceToHistory(sourceToDelete)
+                                                        caffeineTrackerViewModel.undoDeleteCaffeineSource()
                                                     }
                                                 }
                                             },

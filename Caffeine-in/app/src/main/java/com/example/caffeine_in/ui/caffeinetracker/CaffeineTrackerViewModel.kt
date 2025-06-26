@@ -43,6 +43,8 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     // undo last states
     private val _previousInitialCaffeineMg = mutableFloatStateOf(0f)
     private val _previousLastIngestionTimeMillis = mutableLongStateOf(0L)
+    
+    private var lastDeletedItem: Pair<Int, CaffeineSource>? = null
 
     init {
         // preload showcase data if empty && first time launching
@@ -205,9 +207,12 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
     
-    fun reAddCaffeineSourceToHistory(source: CaffeineSource) {
-        viewModelScope.launch {
-            dataRepository.addHistoryItem(source)
+    fun undoDeleteCaffeineSource() {
+        lastDeletedItem?.let { (index, source) ->
+            viewModelScope.launch {
+                dataRepository.insertHistoryItem(index, source)
+                lastDeletedItem = null
+            }
         }
     }
     
@@ -218,6 +223,10 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
 
     fun removeCaffeineSource(source: CaffeineSource) {
         viewModelScope.launch {
+            val index = _historyList.value.indexOf(source)
+            if (index != -1) {
+                lastDeletedItem = Pair(index, source)
+            }
             dataRepository.removeHistoryItem(source)
         }
     }
