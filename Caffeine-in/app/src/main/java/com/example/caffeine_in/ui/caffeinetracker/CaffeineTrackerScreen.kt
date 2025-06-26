@@ -93,7 +93,13 @@ fun CaffeineTrackerScreen(
     
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = Color(0xFFECE0D1)
+        containerColor = Color(0xFFECE0D1),
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            NewSourceFAB(
+                onClick = { showAddDialog.value = true }
+            )
+        }
     ) { innerPadding ->
         val modifiedPadding = PaddingValues(
             top = innerPadding.calculateTopPadding(),
@@ -228,11 +234,11 @@ fun CaffeineTrackerScreen(
                 }
             }
             // --- Floating add button ---
-            NewSourceFAB(
+            /*NewSourceFAB(
                 Modifier
                     .align(Alignment.BottomCenter),
                 onClick = { showAddDialog.value = true }
-            )
+            )*/
             
             // ---- add dialog ----
             if (showAddDialog.value) {
@@ -604,9 +610,7 @@ fun NewSourceFAB(
 ) {
     FloatingActionButton(
         onClick = onClick,
-        modifier = modifier
-            .navigationBarsPadding()
-            .padding(16.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(50.dp),
         containerColor = Color(0xFFE57825)
     ) {
