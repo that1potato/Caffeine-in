@@ -401,6 +401,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         modifier = Modifier.width(IntrinsicSize.Max)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
+        // ---- info ----
         Button(
             onClick = { /* TODO */ },
             //modifier = Modifier.size(16.dp),
@@ -468,7 +469,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
             color = Color(0xFF967259),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
