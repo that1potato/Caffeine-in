@@ -39,6 +39,10 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     // StateFlow for the History List
     private val _historyList = MutableStateFlow<List<CaffeineSource>>(emptyList())
     val historyList: StateFlow<List<CaffeineSource>> = _historyList.asStateFlow()
+    
+    // undo last states
+    private val _previousInitialCaffeineMg = mutableFloatStateOf(0f)
+    private val _previousLastIngestionTimeMillis = mutableLongStateOf(0L)
 
     init {
         // preload showcase data if empty && first time launching
@@ -132,6 +136,9 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         if (amount <= 0) return
 
         viewModelScope.launch {
+            _previousInitialCaffeineMg.floatValue = _initialCaffeineMg.floatValue
+            _previousLastIngestionTimeMillis.longValue = _lastIngestionTimeMillis.longValue
+            
             val currentTimeMillis = System.currentTimeMillis()
             var currentEffectiveMg = 0.0
 
@@ -152,11 +159,29 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             val newTotalInitialEquivalentMg = (currentEffectiveMg + amount).toFloat()
 
             _initialCaffeineMg.floatValue = newTotalInitialEquivalentMg
-            _lastIngestionTimeMillis.longValue = currentTimeMillis // This is the new "start" point for this total amount
-            _displayedCaffeineMg.floatValue = newTotalInitialEquivalentMg // Update display immediately
+            _lastIngestionTimeMillis.longValue = currentTimeMillis // new start point
+            _displayedCaffeineMg.floatValue = newTotalInitialEquivalentMg // immediately update
 
             // Save the new state
             dataRepository.saveCaffeineState(newTotalInitialEquivalentMg, currentTimeMillis)
+            startOrRestartDecayCalculation()
+        }
+    }
+    
+    fun undoLastCaffeineAddition() {
+        viewModelScope.launch {
+            // restore saved state
+            _initialCaffeineMg.floatValue = _previousInitialCaffeineMg.floatValue
+            _lastIngestionTimeMillis.longValue = _previousLastIngestionTimeMillis.longValue
+            _displayedCaffeineMg.floatValue = _initialCaffeineMg.floatValue // Immediately update display
+            
+            if (_initialCaffeineMg.floatValue > 0f) {
+                dataRepository.saveCaffeineState(_initialCaffeineMg.floatValue, _lastIngestionTimeMillis.longValue)
+            } else {
+                dataRepository.clearCaffeineState()
+            }
+            
+            // restart calculation
             startOrRestartDecayCalculation()
         }
     }
@@ -177,6 +202,12 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             val newSource = CaffeineSource(name, amount)
             dataRepository.addHistoryItem(newSource)
             addCaffeine(amount)
+        }
+    }
+    
+    fun reAddCaffeineSourceToHistory(source: CaffeineSource) {
+        viewModelScope.launch {
+            dataRepository.addHistoryItem(source)
         }
     }
     
