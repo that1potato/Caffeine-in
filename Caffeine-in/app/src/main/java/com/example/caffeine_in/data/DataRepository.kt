@@ -65,7 +65,8 @@ class DataRepository(private val context: Context) {
             } else {
                 throw exception
             }
-        }.map { preferences ->
+        }
+        .map { preferences ->
             val jsonString = preferences[PreferencesKeys.HISTORY_LIST] ?: "[]"
             Json.decodeFromString<List<CaffeineSource>>(jsonString)
         }
@@ -105,6 +106,21 @@ class DataRepository(private val context: Context) {
             if (!currentList.any { it.name.equals(source.name, ignoreCase = true) }) {
                 currentList.add(0, source) // Add new items to the top
                 preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(currentList)
+            }
+        }
+    }
+    
+    suspend fun insertHistoryItem(index: Int, source: CaffeineSource) {
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[PreferencesKeys.HISTORY_LIST] ?: "[]"
+            val currentList = Json.decodeFromString<MutableList<CaffeineSource>>(jsonString)
+            // prevent duplicates
+            if (!currentList.any { it.name.equals(source.name, ignoreCase = true) }) {
+                // ensure valid index
+                if (index >= 0 && index <= currentList.size) {
+                    currentList.add(index, source)
+                    preferences[PreferencesKeys.HISTORY_LIST] = Json.encodeToString(currentList)
+                }
             }
         }
     }
