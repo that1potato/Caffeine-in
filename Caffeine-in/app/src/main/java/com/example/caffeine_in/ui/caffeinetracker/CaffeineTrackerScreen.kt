@@ -104,8 +104,8 @@ fun CaffeineTrackerScreen(
         }
     }
     
+    // automatically exit edit mode if the last item is deleted
     LaunchedEffect(historyList) {
-        // automatically exit edit mode if the last item is deleted
         if (historyList.isEmpty()) {
             isEditMode = false
         }
