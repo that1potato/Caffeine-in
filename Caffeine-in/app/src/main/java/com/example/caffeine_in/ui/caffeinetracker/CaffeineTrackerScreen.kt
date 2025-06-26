@@ -34,6 +34,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -73,6 +74,7 @@ fun CaffeineTrackerScreen(
     val showAddDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val listState = rememberLazyListState()
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -166,6 +168,7 @@ fun CaffeineTrackerScreen(
                                 end = 16.dp,
                                 bottom = 0.dp
                             ),
+                            state = listState,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (historyList.isEmpty()) {
@@ -247,6 +250,8 @@ fun CaffeineTrackerScreen(
                         showAddDialog.value = false
                         snackbarJob?.cancel()
                         snackbarJob = scope.launch {
+                            listState.animateScrollToItem(index = 0) // scroll up to the top
+                            
                             val result = snackbarHostState.showSnackbar(
                                 message = "$name added and logged",
                                 actionLabel = "Undo",
