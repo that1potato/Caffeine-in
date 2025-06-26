@@ -1,6 +1,5 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -59,6 +58,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -82,6 +82,7 @@ fun CaffeineTrackerScreen(
     
     var isEditMode by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CaffeineSource?>(null) }
+    var snackbarJob: Job? by remember { mutableStateOf(null) }
     
     LaunchedEffect(historyList) {
         // automatically exit edit mode if the last item is deleted
@@ -185,7 +186,8 @@ fun CaffeineTrackerScreen(
                                             isEditMode = isEditMode,
                                             onAddCaffeine = { amount ->
                                                 caffeineTrackerViewModel.addCaffeine(amount)
-                                                scope.launch {
+                                                snackbarJob?.cancel()
+                                                snackbarJob = scope.launch {
                                                     val result = snackbarHostState.showSnackbar(
                                                         message = "${source.name} logged",
                                                         actionLabel = "Undo",
@@ -198,7 +200,8 @@ fun CaffeineTrackerScreen(
                                             },
                                             onDeleteSource = { sourceToDelete ->
                                                 caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
-                                                scope.launch {
+                                                snackbarJob?.cancel()
+                                                snackbarJob = scope.launch {
                                                     val result = snackbarHostState.showSnackbar(
                                                         message = "${sourceToDelete.name} removed",
                                                         actionLabel = "Undo",
@@ -238,7 +241,8 @@ fun CaffeineTrackerScreen(
                     onConfirm = { name, amount ->
                         caffeineTrackerViewModel.addCaffeineSource(name, amount)
                         showAddDialog.value = false
-                        scope.launch {
+                        snackbarJob?.cancel()
+                        snackbarJob = scope.launch {
                             val result = snackbarHostState.showSnackbar(
                                 message = "$name added and logged",
                                 actionLabel = "Undo",
