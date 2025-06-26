@@ -1,5 +1,6 @@
 package com.example.caffeine_in.ui.caffeinetracker
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -14,7 +15,6 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -54,6 +54,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caffeine_in.data.CaffeineSource
@@ -70,6 +71,9 @@ fun CaffeineTrackerScreen(
     val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
     val historyList by caffeineTrackerViewModel.historyList.collectAsState()
     val showAddDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
@@ -86,149 +90,187 @@ fun CaffeineTrackerScreen(
         }
     }
     
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFECE0D1))
-    ) {
-        Column(
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = Color(0xFFECE0D1)
+    ) { innerPadding ->
+        val modifiedPadding = PaddingValues(
+            top = innerPadding.calculateTopPadding(),
+            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+            bottom = 0.dp
+        )
+        
+        Box(
             modifier = Modifier
-                .fillMaxHeight()
-                .padding(
-                    top = 0.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 0.dp
-                )
-                .statusBarsPadding()
+                .fillMaxWidth()
+                .padding(modifiedPadding)
         ) {
-            // ---- Top Bar ----
-            TopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceEvenly
+                    .fillMaxHeight()
+                    .padding(
+                        top = 0.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 0.dp
+                    )
             ) {
-                // --- Today's Section ---
+                // ---- Top Bar ----
+                TopBar(modifier = Modifier.fillMaxWidth())
+                
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    TodaysTotalSection(
-                        animatedProgress = animatedProgress,
-                        caffeineAmount = displayedCaffeineMg
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-                
-                // --- history Section ---
-                Column(modifier = Modifier.animateContentSize()) {
-                    Row(
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        HistoryHeader(
-                            buttonEnabled = historyList.isNotEmpty(),
-                            isEditMode = isEditMode,
-                            onEditClick = { isEditMode = !isEditMode }
-                        )
-                    }
-                    LazyColumn(
-                        modifier = Modifier.padding(
-                            top = 16.dp,
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 0.dp
-                        ),
+                    // --- Today's Section ---
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        if (historyList.isEmpty()) {
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .height(48.dp)
-                                        .animateItem(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "Add your first caffeine source to get started.",
-                                        color = Color(0xFF967259),
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
-                            }
-                        } else {
-                            items(
-                                historyList,
-                                key = { it.name }
-                            ) { source ->
-                                Column(
-                                    modifier = Modifier.animateItem()
-                                ) {
-                                    History(
-                                        source = source,
-                                        isEditMode = isEditMode,
-                                        onAddCaffeine = { amount ->
-                                            caffeineTrackerViewModel.addCaffeine(amount)
-                                        },
-                                        onDeleteSource = { sourceToDelete ->
-                                            caffeineTrackerViewModel.removeCaffeineSource(
-                                                sourceToDelete
-                                            )
-                                        },
-                                        onEditClick = { item ->
-                                            itemToEdit = item
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                }
-                            }
+                        TodaysTotalSection(
+                            animatedProgress = animatedProgress,
+                            caffeineAmount = displayedCaffeineMg
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                    
+                    // --- history Section ---
+                    Column(modifier = Modifier.animateContentSize()) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            HistoryHeader(
+                                buttonEnabled = historyList.isNotEmpty(),
+                                isEditMode = isEditMode,
+                                onEditClick = { isEditMode = !isEditMode }
+                            )
                         }
-                        item {
-                            Spacer(modifier = Modifier.height(96.dp))
+                        LazyColumn(
+                            modifier = Modifier.padding(
+                                top = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 0.dp
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            if (historyList.isEmpty()) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .height(48.dp)
+                                            .animateItem(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "Add your first caffeine source to get started.",
+                                            color = Color(0xFF967259),
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
+                                }
+                            } else {
+                                items(
+                                    historyList,
+                                    key = { it.name }
+                                ) { source ->
+                                    Column(
+                                        modifier = Modifier.animateItem()
+                                    ) {
+                                        History(
+                                            source = source,
+                                            isEditMode = isEditMode,
+                                            onAddCaffeine = { amount ->
+                                                caffeineTrackerViewModel.addCaffeine(amount)
+                                                scope.launch {
+                                                    val result = snackbarHostState.showSnackbar(
+                                                        message = "${source.name} logged",
+                                                        actionLabel = "Undo",
+                                                        duration = SnackbarDuration.Long
+                                                    )
+                                                    if (result == SnackbarResult.ActionPerformed) {
+                                                        caffeineTrackerViewModel.undoLastCaffeineAddition()
+                                                    }
+                                                }
+                                            },
+                                            onDeleteSource = { sourceToDelete ->
+                                                caffeineTrackerViewModel.removeCaffeineSource(sourceToDelete)
+                                                scope.launch {
+                                                    val result = snackbarHostState.showSnackbar(
+                                                        message = "${sourceToDelete.name} removed",
+                                                        actionLabel = "Undo",
+                                                        duration = SnackbarDuration.Long
+                                                    )
+                                                    if (result == SnackbarResult.ActionPerformed) {
+                                                        caffeineTrackerViewModel.reAddCaffeineSourceToHistory(sourceToDelete)
+                                                    }
+                                                }
+                                            },
+                                            onEditClick = { item ->
+                                                itemToEdit = item
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                    }
+                                }
+                            }
+                            item {
+                                Spacer(modifier = Modifier.height(96.dp))
+                            }
                         }
                     }
                 }
             }
-        }
-        // --- Floating add button ---
-        NewSourceFAB(
-            Modifier
-                .align(Alignment.BottomCenter),
-            onClick = { showAddDialog.value = true }
-        )
-        
-        // ---- add dialog ----
-        if (showAddDialog.value) {
-            AddNewCaffeineDialog(
-                onDismiss = { showAddDialog.value = false },
-                onConfirm = { name, amount ->
-                    caffeineTrackerViewModel.addCaffeineSource(name, amount)
-                    showAddDialog.value = false
-                }
+            // --- Floating add button ---
+            NewSourceFAB(
+                Modifier
+                    .align(Alignment.BottomCenter),
+                onClick = { showAddDialog.value = true }
             )
-        }
-        
-        // ---- edit dialog ----
-        itemToEdit?.let { currentItem ->
-            EditCaffeineDialog(
-                item = currentItem,
-                onDismiss = { itemToEdit = null },
-                onConfirm = { newName, newAmount ->
-                    val updated = caffeineTrackerViewModel.updateCaffeineSource(
-                        oldSource = currentItem,
-                        newName = newName,
-                        newAmount = newAmount
-                    )
-                    if (updated) {
-                        itemToEdit = null // Dismiss dialog on success
+            
+            // ---- add dialog ----
+            if (showAddDialog.value) {
+                AddNewCaffeineDialog(
+                    onDismiss = { showAddDialog.value = false },
+                    onConfirm = { name, amount ->
+                        caffeineTrackerViewModel.addCaffeineSource(name, amount)
+                        showAddDialog.value = false
+                        scope.launch {
+                            val result = snackbarHostState.showSnackbar(
+                                message = "$name added and logged",
+                                actionLabel = "Undo",
+                                duration = SnackbarDuration.Long
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                caffeineTrackerViewModel.removeCaffeineSource(CaffeineSource(name, amount))
+                                caffeineTrackerViewModel.undoLastCaffeineAddition()
+                            }
+                        }
                     }
-                    updated
-                }
-            )
+                )
+            }
+            
+            // ---- edit dialog ----
+            itemToEdit?.let { currentItem ->
+                EditCaffeineDialog(
+                    item = currentItem,
+                    onDismiss = { itemToEdit = null },
+                    onConfirm = { newName, newAmount ->
+                        val updated = caffeineTrackerViewModel.updateCaffeineSource(
+                            oldSource = currentItem,
+                            newName = newName,
+                            newAmount = newAmount
+                        )
+                        if (updated) {
+                            itemToEdit = null // Dismiss dialog on success
+                        }
+                        updated
+                    }
+                )
+            }
         }
     }
 }
