@@ -28,6 +28,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
@@ -44,7 +47,8 @@ const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for m
 
 @Composable
 fun CaffeineTrackerScreen(
-    caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel()
+    caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel(),
+    navController: NavController
 ) {
     val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
     val historyList by caffeineTrackerViewModel.historyList.collectAsState()
@@ -93,7 +97,8 @@ fun CaffeineTrackerScreen(
             TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding()
+                    .statusBarsPadding(),
+                navController = navController
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -286,6 +291,6 @@ fun CaffeineTrackerScreen(
 @Composable
 fun DefaultPreview() {
     CaffeineinTheme {
-        CaffeineTrackerScreen()
+        CaffeineTrackerScreen(navController = rememberNavController())
     }
 }

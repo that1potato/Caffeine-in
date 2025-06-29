@@ -18,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
 fun TopBar( // TODO
-    modifier: Modifier
+    modifier: Modifier,
+    navController: NavController
 ) {
     val buttonColor = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1))
     val iconColor = Color(0xFF38220F)
@@ -35,6 +37,7 @@ fun TopBar( // TODO
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        // ---- analysis ----
         Button(
             onClick = { /*TODO*/ },
             colors = buttonColor,
@@ -49,8 +52,9 @@ fun TopBar( // TODO
             )
         }
         Spacer(modifier = Modifier.weight(1f))
+        // ---- settings ----
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate("settings") },
             colors = buttonColor,
             contentPadding = PaddingValues(0.dp),
             shape = CircleShape

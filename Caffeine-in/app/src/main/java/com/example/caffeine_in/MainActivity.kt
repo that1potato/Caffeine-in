@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
-import androidx.core.view.WindowCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
+import com.example.caffeine_in.ui.settings.SettingsScreen
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +19,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             CaffeineinTheme {
                 Surface {
-                    CaffeineTrackerScreen()
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "tracker") {
+                        composable("tracker") {
+                            CaffeineTrackerScreen(navController = navController)
+                        }
+                        composable("settings") {
+                            SettingsScreen()
+                        }
+                    }
                 }
             }
         }
