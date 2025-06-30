@@ -35,7 +35,11 @@ fun SettingsTopBar(
     val iconModifier = Modifier.size(24.dp)
 
     TopAppBar(
-        modifier = modifier,
+        modifier = modifier
+            .padding(
+                start = 16.dp,
+                end = 16.dp
+            ),
         colors = TopAppBarDefaults.topAppBarColors(Color(0xFFECE0D1)),
         title = {
             Text(
