@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                             CaffeineTrackerScreen(navController = navController)
                         }
                         composable("settings") {
-                            SettingsScreen()
+                            SettingsScreen(navController = navController)
                         }
                     }
                 }
