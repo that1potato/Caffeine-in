@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,7 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.caffeine_in.data.SettingItem
 
@@ -67,7 +68,7 @@ fun SettingsRow(item: SettingItem) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = item.onClick)
-            .padding(vertical = 16.dp),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
@@ -75,14 +76,15 @@ fun SettingsRow(item: SettingItem) {
         ) {
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF38220F)
             )
             item.subtitle?.let {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    fontSize = 14.sp,
+                    color = Color(0xFF967259)
                 )
             }
         }
@@ -99,9 +101,10 @@ fun SettingsRow(item: SettingItem) {
 fun SettingsSectionHeader(title: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
-        fontWeight = FontWeight.SemiBold,
+        color = Color(0xFF38220F),
+        textDecoration = TextDecoration.Underline,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
     )
 }

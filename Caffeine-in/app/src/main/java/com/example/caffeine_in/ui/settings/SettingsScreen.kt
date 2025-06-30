@@ -1,5 +1,8 @@
 package com.example.caffeine_in.ui.settings
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,20 +32,12 @@ import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 @Composable
 fun SettingsScreen(navController: NavController) {
-    var bubblesEnabled by remember { mutableStateOf(false) }
-
     val settingsItems = listOf(
-        SettingSection("Manage"),
-        SettingItem("App notifications", "Control notifications from individual apps"),
-        SettingItem("Notification history", "Show recent and snoozed notifications"),
-        SettingSection("Conversation"),
-        SettingItem("Conversations", "21 priority conversations"),
-        SettingItem("Bubbles", if (bubblesEnabled) "On" else "Off", hasSwitch = true, isSwitchEnabled = bubblesEnabled, onSwitchChange = { bubblesEnabled = it }),
-        SettingSection("Privacy"),
-        SettingItem("Notification read, reply & control", "Control which apps and devices can read notifications"),
-        SettingItem("Notifications on lock screen"),
-        SettingSection("Sync across devices"),
-        SettingItem("Dismiss notifications across Pixel devices", "Notifications dismissed on your Pixel phone or tablet will no longer appear on both"),
+        SettingSection("General"),
+        SettingItem("Dark Theme", "Select a theme"),
+        SettingItem("Material You Colors", "Turn Material You colors on/off"),
+
+        SettingSection("License"),
     )
 
     Scaffold(
@@ -55,11 +51,18 @@ fun SettingsScreen(navController: NavController) {
             )
         }
     ) { innerPadding ->
+        val modifiedPadding = PaddingValues(
+            top = innerPadding.calculateTopPadding(),
+            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+            bottom = 0.dp
+        )
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
+                .padding(modifiedPadding)
+                .padding(horizontal = 32.dp)
         ) {
             items(settingsItems.size) { index ->
                 when (val item = settingsItems[index]) {
