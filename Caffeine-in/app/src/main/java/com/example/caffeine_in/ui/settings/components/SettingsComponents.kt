@@ -49,7 +49,7 @@ fun SettingsTopBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { navController.navigate("tracker") }) {
+            IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
                     modifier = iconModifier,
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
