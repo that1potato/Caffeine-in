@@ -1,7 +1,9 @@
 package com.example.caffeine_in.ui.settings
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -30,6 +32,7 @@ import com.example.caffeine_in.data.SettingItem
 import com.example.caffeine_in.data.SettingSection
 import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
+import com.example.caffeine_in.ui.settings.components.SettingsTopBar
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,19 +57,11 @@ fun SettingsScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFECE0D1),
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(Color(0xFFECE0D1)),
-                title = {
-                    Text(
-                        text = "Settings",
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
+            SettingsTopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding(),
+                navController = navController
             )
         }
     ) { innerPadding ->
