@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
+import com.example.caffeine_in.ui.settings.LicensesScreen
 import com.example.caffeine_in.ui.settings.SettingsScreen
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
@@ -26,6 +27,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("settings") {
                             SettingsScreen(navController = navController)
+                        }
+                        composable("licenses") {
+                            LicensesScreen(navController = navController)
                         }
                     }
                 }

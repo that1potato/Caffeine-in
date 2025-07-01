@@ -3,6 +3,7 @@ package com.example.caffeine_in.ui.settings.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -111,7 +115,7 @@ fun SettingsSectionHeader(title: String) {
 }
 
 @Composable
-fun License() {
+fun License(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -119,47 +123,40 @@ fun License() {
         colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
         border = BorderStroke(width = 1.dp, color = Color(0xFF967259))
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Caffeine-In",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-                color = Color(0xFF38220F)
-            )
-            Text(
-                text = "Copyright (c) 2025 Potato987.",
-                fontSize = 14.sp,
-                color = Color(0xFF38220F)
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Caffeine-In",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    color = Color(0xFF38220F)
+                )
+                Text(
+                    text = "Copyright (c) 2025 Potato987.",
+                    fontSize = 14.sp,
+                    color = Color(0xFF38220F)
+                )
+            }
+            Button(
+                onClick = { navController.navigate("licenses") },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.size(48.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F)),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Open Licenses",
+                    tint = Color(0xFFECE0D1)
+                )
+            }
         }
     }
-    Text(
-        text = "\n" + "Application License",
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
-        color = Color(0xFF38220F)
-    )
-    Text(
-        text = "This program is free software: you can redistribute it and/or modify " +
-                "it under the terms of the GNU Affero General Public License as " +
-                "published by the Free Software Foundation, either version 3 of the " +
-                "License, or (at your option) any later version.\n" +
-                "\n" +
-                "This program is distributed in the hope that it will be useful, " +
-                "but WITHOUT ANY WARRANTY; without even the implied warranty of " +
-                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the " +
-                "GNU Affero General Public License for more details.\n" +
-                "\n" +
-                "You should have received a copy of the GNU Affero General Public License" +
-                "along with this program. If not, see <https://www.gnu.org/licenses/>.",
-        fontSize = 14.sp,
-        color = Color(0xFF38220F)
-    )
-    
 }
 
 @Composable
