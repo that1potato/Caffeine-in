@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.SettingItem
 import com.example.caffeine_in.data.SettingSection
+import com.example.caffeine_in.ui.settings.components.License
 import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
 import com.example.caffeine_in.ui.settings.components.SettingsTopBar
@@ -37,7 +38,7 @@ fun SettingsScreen(navController: NavController) {
         SettingItem("Dark Theme", "Select a theme"),
         SettingItem("Material You Colors", "Turn Material You colors on/off"),
 
-        SettingSection("License"),
+        SettingSection("License")
     )
 
     Scaffold(
@@ -76,6 +77,9 @@ fun SettingsScreen(navController: NavController) {
                         }
                     }
                 }
+            }
+            item {
+                License()
             }
         }
     }
