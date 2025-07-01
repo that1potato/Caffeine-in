@@ -1,10 +1,12 @@
 package com.example.caffeine_in.ui.settings
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -54,7 +56,13 @@ fun LicensesScreen(navController: NavController) {
                 .padding(horizontal = 32.dp)
         ) {
             item {
-                LicensesText()
+                AppLicense()
+            }
+            item {
+                FontLicense()
+            }
+            item {
+                Spacer(modifier = Modifier.height(96.dp))
             }
         }
     }
@@ -95,9 +103,9 @@ fun LicensesTopBar(
 }
 
 @Composable
-fun LicensesText() {
+fun AppLicense() {
     Text(
-        text = "\n" + "Application License",
+        text = "\n" + "Application License\n",
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         color = Color(0xFF38220F)
@@ -115,6 +123,25 @@ fun LicensesText() {
                 "\n" +
                 "You should have received a copy of the GNU Affero General Public License" +
                 "along with this program. If not, see <https://www.gnu.org/licenses/>.",
+        fontSize = 14.sp,
+        color = Color(0xFF38220F)
+    )
+}
+
+@Composable
+fun FontLicense() {
+    Text(
+        text = "\n" + "Font License\n",
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        color = Color(0xFF38220F)
+    )
+    Text(
+        text = "Copyright 2014-2020 The Fira Code Project Authors (https://github.com/tonsky/FiraCode)\n" +
+                "This Font Software is licensed under the SIL Open Font License, Version 1.1 . " +
+                "This license is available with a FAQ at: https://openfontlicense.org\n" +
+                "\n" +
+                "SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007",
         fontSize = 14.sp,
         color = Color(0xFF38220F)
     )
