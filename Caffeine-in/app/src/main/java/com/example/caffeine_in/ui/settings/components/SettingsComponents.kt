@@ -36,11 +36,7 @@ fun SettingsTopBar(
     val iconModifier = Modifier.size(24.dp)
 
     TopAppBar(
-        modifier = modifier
-            .padding(
-                start = 16.dp,
-                end = 16.dp
-            ),
+        modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(Color(0xFFECE0D1)),
         title = {
             Text(
@@ -50,7 +46,9 @@ fun SettingsTopBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = { navController.navigateUp() }) {
+            IconButton(
+                onClick = { navController.navigateUp() }
+            ) {
                 Icon(
                     modifier = iconModifier,
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -102,9 +100,19 @@ fun SettingsSectionHeader(title: String) {
     Text(
         text = title,
         color = Color(0xFF38220F),
-        textDecoration = TextDecoration.Underline,
-        fontSize = 16.sp,
+        //textDecoration = TextDecoration.Underline,
+        fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
     )
+}
+
+@Composable
+fun License() {
+
+}
+
+@Composable
+fun Support() {
+
 }
