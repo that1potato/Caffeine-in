@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.SettingItem
 import com.example.caffeine_in.data.SettingSection
+import com.example.caffeine_in.ui.settings.components.Author
 import com.example.caffeine_in.ui.settings.components.License
 import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
@@ -36,7 +37,11 @@ fun SettingsScreen(navController: NavController) {
         SettingItem("Dark Theme", "Select a theme"),
         SettingItem("Material You Colors", "Turn Material You colors on/off"),
 
-        SettingSection("License")
+        SettingSection("License"),
+        SettingItem(
+            "Licenses", "Tap to open licenses",
+            onClick = { navController.navigate("licenses") }
+        )
     )
 
     Scaffold(
@@ -63,6 +68,9 @@ fun SettingsScreen(navController: NavController) {
                 .padding(modifiedPadding)
                 .padding(horizontal = 32.dp)
         ) {
+            item {
+                Author()
+            }
             items(settingsItems.size) { index ->
                 when (val item = settingsItems[index]) {
                     is SettingSection -> {
@@ -71,13 +79,13 @@ fun SettingsScreen(navController: NavController) {
                     is SettingItem -> {
                         SettingsRow(item = item)
                         if (index < settingsItems.lastIndex && settingsItems[index + 1] !is SettingSection) {
-                            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
+                            HorizontalDivider(color = Color(0x5F967259))
                         }
                     }
                 }
             }
             item {
-                License(navController)
+                License()
             }
             item {
                 Spacer(modifier = Modifier.height(96.dp))
