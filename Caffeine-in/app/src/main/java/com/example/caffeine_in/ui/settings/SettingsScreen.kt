@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,11 +22,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.SettingItem
 import com.example.caffeine_in.data.SettingSection
-import com.example.caffeine_in.ui.settings.components.Author
 import com.example.caffeine_in.ui.settings.components.License
 import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
 import com.example.caffeine_in.ui.settings.components.SettingsTopBar
+import com.example.caffeine_in.ui.settings.components.BuyMeACoffee
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 @Composable
@@ -69,7 +68,7 @@ fun SettingsScreen(navController: NavController) {
                 .padding(horizontal = 32.dp)
         ) {
             item {
-                Author()
+                BuyMeACoffee()
             }
             items(settingsItems.size) { index ->
                 when (val item = settingsItems[index]) {
