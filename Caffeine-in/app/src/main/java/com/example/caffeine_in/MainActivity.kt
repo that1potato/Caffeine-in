@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
+import com.example.caffeine_in.ui.info.InfoScreen
 import com.example.caffeine_in.ui.settings.LicensesScreen
 import com.example.caffeine_in.ui.settings.SettingsScreen
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
@@ -24,6 +25,9 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "tracker") {
                         composable("tracker") {
                             CaffeineTrackerScreen(navController = navController)
+                        }
+                        composable("info") {
+                            InfoScreen(navController = navController)
                         }
                         composable("settings") {
                             SettingsScreen(navController = navController)

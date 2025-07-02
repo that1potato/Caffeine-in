@@ -40,12 +40,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.caffeine_in.ui.caffeinetracker.MAX_CAFFEINE_AMOUNT
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
+fun TodaysTotalSection(
+    animatedProgress: Float,
+    caffeineAmount: Float,
+    navController: NavController
+) {
     
     // desired waveSpeed and waveLength based on caffeineAmount
     val targetWaveSpeed: Float
@@ -117,7 +122,7 @@ fun TodaysTotalSection(animatedProgress: Float, caffeineAmount: Float) {
         Spacer(modifier = Modifier.height(16.dp))
         // ---- info ----
         Button(
-            onClick = { /* TODO */ },
+            onClick = { navController.navigate("info") },
             //modifier = Modifier.size(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
             contentPadding = PaddingValues(horizontal = 0.dp)
