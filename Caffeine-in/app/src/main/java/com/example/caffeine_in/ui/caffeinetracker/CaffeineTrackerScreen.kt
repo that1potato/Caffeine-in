@@ -145,7 +145,8 @@ fun CaffeineTrackerScreen(
                     ) {
                         TodaysTotalSection(
                             animatedProgress = animatedProgress,
-                            caffeineAmount = displayedCaffeineMg
+                            caffeineAmount = displayedCaffeineMg,
+                            navController = navController
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                     }
