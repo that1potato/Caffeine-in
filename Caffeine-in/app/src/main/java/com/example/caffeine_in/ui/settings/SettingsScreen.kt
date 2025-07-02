@@ -35,6 +35,16 @@ fun SettingsScreen(navController: NavController) {
         SettingSection("General"),
         SettingItem("Dark Theme", "Select a theme"),
         SettingItem("Material You Colors", "Turn Material You colors on/off"),
+        
+        SettingSection("Notification"),
+        SettingItem("HAHAHA"),
+        
+        SettingSection("Widget"),
+        SettingItem("HAHAHA"),
+        
+        SettingSection("Data & Privacy"),
+        SettingItem("Reset Caffeine Level", "Reset caffeine level to 0mg"),
+        SettingItem("Privacy Statement"),
 
         SettingSection("License"),
         SettingItem(
