@@ -33,8 +33,14 @@ import com.example.caffeine_in.ui.theme.CaffeineinTheme
 fun SettingsScreen(navController: NavController) {
     val settingsItems = listOf(
         SettingSection("General"),
-        SettingItem("Dark Theme", "Select a theme"),
+        SettingItem("Dark Theme", "Dark mode behaviour"),
         SettingItem("Material You Colors", "Turn Material You colors on/off"),
+        SettingItem("Bedtime Schedule", "Set your bedtime schedule"),
+        SettingItem(
+            "About Caffeine Level",
+            "Tap to learn more about how the app helps track your caffeine level",
+            onClick = { navController.navigate("info") }
+        ),
         
         SettingSection("Notification"),
         SettingItem("HAHAHA"),
