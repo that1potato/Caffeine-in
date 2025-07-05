@@ -49,7 +49,7 @@ import kotlin.math.roundToInt
 fun TodaysTotalSection(
     animatedProgress: Float,
     caffeineAmount: Float,
-    navController: NavController
+    onInfoClick: () -> Unit
 ) {
     
     // desired waveSpeed and waveLength based on caffeineAmount
@@ -122,7 +122,7 @@ fun TodaysTotalSection(
         Spacer(modifier = Modifier.height(16.dp))
         // ---- info ----
         Button(
-            onClick = { navController.navigate("info") },
+            onClick = onInfoClick,
             //modifier = Modifier.size(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
             contentPadding = PaddingValues(horizontal = 0.dp)

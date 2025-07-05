@@ -191,3 +191,44 @@ fun EditCaffeineDialog(
         }
     )
 }
+
+@Composable
+fun IndicatorDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        containerColor = Color(0xFFECE0D1),
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "New Caffeine Source",
+                color = Color(0xFF38220F),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        },
+        text = {
+        
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38220F))
+            ) {
+                Text(
+                    text = "Learn More",
+                    color = Color(0xFFECE0D1)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = "Dismiss",
+                    color = Color(0xFF38220F)
+                )
+            }
+        }
+    )
+}
