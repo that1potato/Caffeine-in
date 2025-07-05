@@ -29,13 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.History
 import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
+import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.NewSourceFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
 import com.example.caffeine_in.ui.caffeinetracker.components.TopBar
@@ -53,6 +53,7 @@ fun CaffeineTrackerScreen(
     val displayedCaffeineMg by caffeineTrackerViewModel.displayedCaffeineMg
     val historyList by caffeineTrackerViewModel.historyList.collectAsState()
     val showAddDialog = remember { mutableStateOf(false) }
+    val showIndicatorDialog = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
@@ -146,7 +147,7 @@ fun CaffeineTrackerScreen(
                         TodaysTotalSection(
                             animatedProgress = animatedProgress,
                             caffeineAmount = displayedCaffeineMg,
-                            navController = navController
+                            onInfoClick = { showIndicatorDialog.value = true }
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                     }
@@ -240,6 +241,14 @@ fun CaffeineTrackerScreen(
                         }
                     }
                 }
+            }
+            
+            // ---- indicator dialog ----
+            if (showIndicatorDialog.value) {
+                IndicatorDialog(
+                    onDismiss = { showIndicatorDialog.value = false },
+                    onConfirm = { navController.navigate("info") }
+                )
             }
             
             // ---- add dialog ----
