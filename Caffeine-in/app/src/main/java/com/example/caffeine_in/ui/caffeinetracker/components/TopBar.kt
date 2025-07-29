@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun TopBar( // TODO
+fun TopBar(
     modifier: Modifier,
     navController: NavController
 ) {
