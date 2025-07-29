@@ -34,7 +34,7 @@ fun TopBar( // TODO
         horizontalArrangement = Arrangement.Center
     ) {
         // ---- analysis ----
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { navController.navigate("analysis") }) {
             Icon(
                 imageVector = Icons.Outlined.AutoGraph,
                 contentDescription = "Analysis",

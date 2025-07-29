@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.caffeine_in.ui.analysis.AnalysisScreen
 import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
 import com.example.caffeine_in.ui.info.InfoScreen
 import com.example.caffeine_in.ui.settings.LicensesScreen
@@ -28,6 +29,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("info") {
                             InfoScreen(navController = navController)
+                        }
+                        composable("analysis") {
+                            AnalysisScreen(navController = navController)
                         }
                         composable("settings") {
                             SettingsScreen(navController = navController)
