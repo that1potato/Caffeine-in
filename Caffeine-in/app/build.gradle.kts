@@ -2,12 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
 }
 
 android {
     namespace = "com.example.caffeine_in"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.caffeine_in"
