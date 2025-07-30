@@ -26,6 +26,7 @@ class DataRepository(private val context: Context) {
         val LAST_INGESTION_TIME_MILLIS = longPreferencesKey("last_ingestion_time_millis")
         val HISTORY_LIST = stringPreferencesKey("caffeine_history_list")
         val APP_HAS_BEEN_LAUNCHED_BEFORE = booleanPreferencesKey("app_has_been_launched_before")
+        val INTAKE_LIST = stringPreferencesKey("caffeine_intake_list")
     }
 
     // caffeine decay calculation state
@@ -69,6 +70,20 @@ class DataRepository(private val context: Context) {
         .map { preferences ->
             val jsonString = preferences[PreferencesKeys.HISTORY_LIST] ?: "[]"
             Json.decodeFromString<List<CaffeineSource>>(jsonString)
+        }
+
+    // caffeine intake list
+    val intakeListFlow: Flow<List<CaffeineIntake>> = context.dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            val jsonString = preferences[PreferencesKeys.INTAKE_LIST] ?: "[]"
+            Json.decodeFromString<List<CaffeineIntake>>(jsonString)
         }
     
     suspend fun setHasBeenLaunchedBefore() {
@@ -160,5 +175,37 @@ class DataRepository(private val context: Context) {
             }
         }
         return updated
+    }
+
+    // intake management methods
+    suspend fun addIntake(intake: CaffeineIntake) {
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[PreferencesKeys.INTAKE_LIST] ?: "[]"
+            val currentList = Json.decodeFromString<MutableList<CaffeineIntake>>(jsonString)
+            currentList.add(0, intake) // add to top (most recent first)
+            preferences[PreferencesKeys.INTAKE_LIST] = Json.encodeToString(currentList)
+        }
+    }
+
+    suspend fun removeLastIntake(): CaffeineIntake? {
+        var removedIntake: CaffeineIntake? = null
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[PreferencesKeys.INTAKE_LIST] ?: "[]"
+            val currentList = Json.decodeFromString<MutableList<CaffeineIntake>>(jsonString)
+            if (currentList.isNotEmpty()) {
+                removedIntake = currentList.removeAt(0) // remove most recent
+                preferences[PreferencesKeys.INTAKE_LIST] = Json.encodeToString(currentList)
+            }
+        }
+        return removedIntake
+    }
+
+    suspend fun restoreIntake(intake: CaffeineIntake) {
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[PreferencesKeys.INTAKE_LIST] ?: "[]"
+            val currentList = Json.decodeFromString<MutableList<CaffeineIntake>>(jsonString)
+            currentList.add(0, intake) // restore to top
+            preferences[PreferencesKeys.INTAKE_LIST] = Json.encodeToString(currentList)
+        }
     }
 }

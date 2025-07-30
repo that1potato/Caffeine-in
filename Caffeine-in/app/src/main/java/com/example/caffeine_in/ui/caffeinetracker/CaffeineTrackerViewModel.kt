@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.caffeine_in.data.CaffeineIntake
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.data.DataRepository
 import kotlinx.coroutines.Job
@@ -40,13 +41,14 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     // StateFlow for the History List
     private val _historyList = MutableStateFlow<List<CaffeineSource>>(emptyList())
     val historyList: StateFlow<List<CaffeineSource>> = _historyList.asStateFlow()
-    
+
     // undo last states
     private val _previousInitialCaffeineMg = mutableFloatStateOf(0f)
     private val _previousLastIngestionTimeMillis = mutableLongStateOf(0L)
-    
+    private var _lastRemovedIntake: CaffeineIntake? = null
+
     private var lastDeletedItem: Pair<Int, CaffeineSource>? = null
-    
+
     private val _scrollToTopEvent = MutableStateFlow(false)
     val scrollToTopEvent: StateFlow<Boolean> = _scrollToTopEvent.asStateFlow()
 
@@ -55,7 +57,7 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         viewModelScope.launch {
             val hasBeenLaunchedBefore = dataRepository.hasBeenLaunchedBeforeFlow.first()
             val isHistoryEmpty = dataRepository.historyListFlow.first().isEmpty()
-            
+
             // Check if the app has been launched before.
             if (!hasBeenLaunchedBefore && isHistoryEmpty) {
                 val initialList = listOf(
@@ -65,7 +67,7 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
                     CaffeineSource("Grey Bull", 80),
                     CaffeineSource("Pink Bull", 80)
                 )
-                
+
                 dataRepository.setHistoryList(initialList)
                 dataRepository.setHasBeenLaunchedBefore()
             }
@@ -138,13 +140,13 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-    fun addCaffeine(amount: Int) {
+    fun addCaffeine(amount: Int, sourceName: String = "Manual Entry") {
         if (amount <= 0) return
 
         viewModelScope.launch {
             _previousInitialCaffeineMg.floatValue = _initialCaffeineMg.floatValue
             _previousLastIngestionTimeMillis.longValue = _lastIngestionTimeMillis.longValue
-            
+
             val currentTimeMillis = System.currentTimeMillis()
             var currentEffectiveMg = 0.0
 
@@ -168,27 +170,44 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             _lastIngestionTimeMillis.longValue = currentTimeMillis // new start point
             _displayedCaffeineMg.floatValue = newTotalInitialEquivalentMg // immediately update
 
+            // Log the intake
+            val intake = CaffeineIntake(sourceName, amount, currentTimeMillis)
+            dataRepository.addIntake(intake)
+
             // Save the new state
             dataRepository.saveCaffeineState(newTotalInitialEquivalentMg, currentTimeMillis)
             startOrRestartDecayCalculation()
         }
     }
-    
+
     fun undoLastCaffeineAddition() {
         viewModelScope.launch {
+            // Remove the last intake entry
+            _lastRemovedIntake = dataRepository.removeLastIntake()
+
             // restore saved state
             _initialCaffeineMg.floatValue = _previousInitialCaffeineMg.floatValue
             _lastIngestionTimeMillis.longValue = _previousLastIngestionTimeMillis.longValue
             _displayedCaffeineMg.floatValue = _initialCaffeineMg.floatValue // Immediately update display
-            
+
             if (_initialCaffeineMg.floatValue > 0f) {
                 dataRepository.saveCaffeineState(_initialCaffeineMg.floatValue, _lastIngestionTimeMillis.longValue)
             } else {
                 dataRepository.clearCaffeineState()
             }
-            
+
             // restart calculation
             startOrRestartDecayCalculation()
+        }
+    }
+
+    fun redoLastCaffeineAddition() {
+        _lastRemovedIntake?.let { intake ->
+            viewModelScope.launch {
+                dataRepository.restoreIntake(intake)
+                addCaffeine(intake.amount, intake.sourceName)
+                _lastRemovedIntake = null
+            }
         }
     }
 
@@ -207,10 +226,10 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
         viewModelScope.launch {
             val newSource = CaffeineSource(name, amount)
             dataRepository.addHistoryItem(newSource)
-            addCaffeine(amount)
+            addCaffeine(amount, name)
         }
     }
-    
+
     fun undoDeleteCaffeineSource() {
         lastDeletedItem?.let { (index, source) ->
             if (index == 0) {
@@ -222,11 +241,11 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
             }
         }
     }
-    
+
     fun onScrollToTopEventConsumed() {
         _scrollToTopEvent.value = false
     }
-    
+
     suspend fun updateCaffeineSource(oldSource: CaffeineSource, newName: String, newAmount: Int): Boolean {
         if (newName.isBlank() || newAmount <= 0) return false
         return dataRepository.updateHistoryItem(oldSource, newName, newAmount)

@@ -200,7 +200,7 @@ fun CaffeineTrackerScreen(
                                             source = source,
                                             isEditMode = isEditMode,
                                             onAddCaffeine = { amount ->
-                                                caffeineTrackerViewModel.addCaffeine(amount)
+                                                caffeineTrackerViewModel.addCaffeine(amount, source.name)
                                                 snackbarJob?.cancel()
                                                 snackbarJob = scope.launch {
                                                     val result = snackbarHostState.showSnackbar(
