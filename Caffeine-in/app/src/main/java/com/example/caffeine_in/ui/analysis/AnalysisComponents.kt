@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -149,41 +147,34 @@ fun IntakeHistoryItem(
 ) {
     val dateFormatter = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
 
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = intake.sourceName,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Color(0xFF38220F)
-                )
-                Text(
-                    text = "${intake.amount}mg",
-                    fontSize = 14.sp,
-                    color = Color(0xFF967259)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = dateFormatter.format(Date(intake.timestampMillis)),
+                text = intake.sourceName,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF38220F)
+            )
+            Text(
+                text = "${intake.amount}mg",
                 fontSize = 14.sp,
-                color = Color(0xFF967259),
-                fontWeight = FontWeight.Medium
+                color = Color(0xFF967259)
             )
         }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = dateFormatter.format(Date(intake.timestampMillis)),
+            fontSize = 14.sp,
+            color = Color(0xFF967259),
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 

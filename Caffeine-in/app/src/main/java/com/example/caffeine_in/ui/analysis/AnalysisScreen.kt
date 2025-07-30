@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,8 +58,9 @@ fun AnalysisScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(modifiedPadding)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 32.dp)
         ) {
+            // histogram
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -67,33 +68,27 @@ fun AnalysisScreen(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF38220F),
-                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            item {
                 CaffeineHistogram(
                     data = histogramData,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(32.dp))
             }
 
+            // intake history
             item {
                 Text(
                     text = "Intake History",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF38220F),
-                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
-
             if (intakeList.isEmpty()) {
                 item {
                     Box(
@@ -111,12 +106,13 @@ fun AnalysisScreen(
                     }
                 }
             } else {
-                items(intakeList) { intake ->
+                items(intakeList.size) { index ->
                     IntakeHistoryItem(
-                        intake = intake,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        intake = intakeList[index]
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    if (index < intakeList.lastIndex) {
+                        HorizontalDivider(color = Color(0x5F967259))
+                    }
                 }
             }
 
