@@ -61,7 +61,7 @@ fun AnalysisScreen(
                 .padding(horizontal = 32.dp)
         ) {
             // histogram
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Caffeine Level (Past 24 Hours)",
@@ -77,7 +77,7 @@ fun AnalysisScreen(
                         .height(200.dp)
                 )
                 Spacer(modifier = Modifier.height(32.dp))
-            }
+            }*/
 
             // intake history
             item {
