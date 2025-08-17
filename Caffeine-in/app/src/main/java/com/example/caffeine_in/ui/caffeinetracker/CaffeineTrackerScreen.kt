@@ -38,6 +38,7 @@ import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
 import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.NewSourceFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
+import com.example.caffeine_in.ui.caffeinetracker.components.ToolBarFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TopBar
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 
 const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CaffeineTrackerScreen(
     caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel(),
@@ -94,20 +96,21 @@ fun CaffeineTrackerScreen(
     }
     
     Scaffold(
-        topBar = {
+        /*topBar = {
             TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding(),
                 navController = navController
             )
-        },
+        },*/
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = Color(0xFFECE0D1),
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            NewSourceFAB(
-                onClick = { showAddDialog.value = true }
+            ToolBarFAB(
+                navController = navController,
+                onFabClick = { showAddDialog.value = true }
             )
         }
     ) { innerPadding ->
