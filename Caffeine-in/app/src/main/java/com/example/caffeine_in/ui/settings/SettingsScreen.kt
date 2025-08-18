@@ -33,24 +33,24 @@ import com.example.caffeine_in.ui.theme.CaffeineinTheme
 fun SettingsScreen(navController: NavController) {
     val settingsItems = listOf(
         SettingSection("General"),
-        SettingItem("Dark Theme", "Dark mode behaviour"),
-        SettingItem("Material You Colors", "Turn Material You colors on/off"),
-        SettingItem("Bedtime Schedule", "Set your bedtime schedule"),
+        //SettingItem("Dark Theme", "Dark mode behaviour"),
+        //SettingItem("Material You Colors", "Turn Material You colors on/off"),
+        //SettingItem("Bedtime Schedule", "Set your bedtime schedule"),
         SettingItem(
             "About Caffeine Level",
             "Tap to learn more about how the app helps track your caffeine level",
             onClick = { navController.navigate("info") }
         ),
         
-        SettingSection("Notification"),
-        SettingItem("HAHAHA"),
+        //SettingSection("Notification"),
+        //SettingItem("HAHAHA"),
         
-        SettingSection("Widget"),
-        SettingItem("HAHAHA"),
+        //SettingSection("Widget"),
+        //SettingItem("HAHAHA"),
         
-        SettingSection("Data & Privacy"),
-        SettingItem("Reset Caffeine Level", "Reset caffeine level to 0mg"),
-        SettingItem("Privacy Statement"),
+        //SettingSection("Data & Privacy"),
+        //SettingItem("Reset Caffeine Level", "Reset caffeine level to 0mg"),
+        //SettingItem("Privacy Statement"),
 
         SettingSection("License"),
         SettingItem(
