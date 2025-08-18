@@ -1,6 +1,5 @@
 package com.example.caffeine_in.ui.caffeinetracker.components
 
-import android.widget.Toolbar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,18 +14,17 @@ import androidx.compose.material.icons.outlined.Coffee
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingToolbarColors
-import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarHorizontalFabPosition
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -62,25 +60,20 @@ fun NewSourceFAB(
     }
 }
 
-@ExperimentalMaterial3ExpressiveApi
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ToolBarFAB(
-    modifier: Modifier = Modifier,
     navController: NavController,
-    onFabClick: () -> Unit,
-    expanded: Boolean = true
+    currentDestination: String?,
+    onFabClick: () -> Unit
 ) {
-    val toolbarColors = FloatingToolbarColors(
-        toolbarContainerColor = Color(0xFFC5B5A6),
-        toolbarContentColor = Color(0xFF38220F),
-        fabContainerColor = Color(0xFFE57825),
-        fabContentColor = Color(0xFF38220F)
+    val items = listOf(
+        NavItem("analysis", Icons.Outlined.AutoGraph, "Analysis"),
+        NavItem("tracker", Icons.Outlined.Coffee, "Tracker"),
+        NavItem("settings", Icons.Outlined.Settings, "Settings")
     )
-    
+
     HorizontalFloatingToolbar(
-        modifier = modifier,
-        expanded = expanded,
-        colors = toolbarColors,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onFabClick,
@@ -93,49 +86,27 @@ fun ToolBarFAB(
                 )
             }
         },
-        floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.End,
-        content = {
-            // Analysis button
-            IconButton(
-                onClick = { navController.navigate("analysis") }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.AutoGraph,
-                    contentDescription = "Analysis",
-                    tint = Color(0xFF38220F),
-                    modifier = Modifier.size(24.dp)
+        floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.End
+    ) {
+        items.forEach { item ->
+            NavigationBarItem(
+                selected = currentDestination == item.route,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = { Icon(item.icon, contentDescription = item.label) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color(0xFFECE0D1),
+                    unselectedIconColor = Color(0xFF38220F),
+                    indicatorColor = Color(0xFF38220F)
                 )
-            }
-            
-            // Tracker button
-            IconButton(
-                colors = IconButtonColors(
-                    containerColor = Color(0xFF38220F),
-                    contentColor = Color(0xFF38220F),
-                    disabledContainerColor = Color(0xFFC5B5A6),
-                    disabledContentColor = Color(0xFF38220F)
-                ),
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Coffee,
-                    contentDescription = "Tracker",
-                    tint = Color(0xFFECE0D1),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            
-            // Settings button
-            IconButton(
-                onClick = { navController.navigate("settings") }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
-                    tint = Color(0xFF38220F),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            )
         }
-    )
+    }
 }
+
+private data class NavItem(val route: String, val icon: ImageVector, val label: String)

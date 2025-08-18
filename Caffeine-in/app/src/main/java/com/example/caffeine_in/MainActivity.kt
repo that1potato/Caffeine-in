@@ -5,14 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.caffeine_in.ui.analysis.AnalysisScreen
-import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
-import com.example.caffeine_in.ui.info.InfoScreen
-import com.example.caffeine_in.ui.settings.LicensesScreen
-import com.example.caffeine_in.ui.settings.SettingsScreen
+import com.example.caffeine_in.ui.navigation.CaffeineApp
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,26 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CaffeineinTheme {
-                Surface {
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "tracker") {
-                        composable("tracker") {
-                            CaffeineTrackerScreen(navController = navController)
-                        }
-                        composable("info") {
-                            InfoScreen(navController = navController)
-                        }
-                        composable("analysis") {
-                            AnalysisScreen(navController = navController)
-                        }
-                        composable("settings") {
-                            SettingsScreen(navController = navController)
-                        }
-                        composable("licenses") {
-                            LicensesScreen(navController = navController)
-                        }
-                    }
-                }
+                Surface { CaffeineApp() }
             }
         }
     }

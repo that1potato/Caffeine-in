@@ -38,7 +38,6 @@ import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
 import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.NewSourceFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
-import com.example.caffeine_in.ui.caffeinetracker.components.ToolBarFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TopBar
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
@@ -96,29 +95,21 @@ fun CaffeineTrackerScreen(
     }
     
     Scaffold(
-        /*topBar = {
+        topBar = {
             TopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding(),
                 navController = navController
             )
-        },*/
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = Color(0xFFECE0D1),
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ToolBarFAB(
-                navController = navController,
-                onFabClick = { showAddDialog.value = true }
-            )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         val modifiedPadding = PaddingValues(
             top = innerPadding.calculateTopPadding(),
             start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
             end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-            bottom = 0.dp
+            bottom = innerPadding.calculateBottomPadding()
         )
         
         Box(
