@@ -22,7 +22,14 @@ fun AnimatedFloatingNavBar(
     showFab: Boolean = false,
     onFabClick: () -> Unit = {}
 ) {
+    // offset padding for showing elevation shadow
     val paddingOffset = 12.dp
+    
+    val floatingToolbarPaddingSpec = 8.dp
+    
+    // animation specs
+    val dampingRatio = Spring.DampingRatioLowBouncy
+    val stiffness = Spring.StiffnessLow
     
     Box(
         modifier = modifier.fillMaxWidth()
@@ -33,15 +40,16 @@ fun AnimatedFloatingNavBar(
             modifier = Modifier
                 .animateContentSize(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium
+                        dampingRatio = dampingRatio,
+                        stiffness = stiffness
                     )
                 )
                 .padding(vertical = paddingOffset),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
+            
             // custom toolbar surface
             Surface(
                 shape = MaterialTheme.shapes.extraExtraLarge,
@@ -51,7 +59,7 @@ fun AnimatedFloatingNavBar(
                 tonalElevation = 3.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = floatingToolbarPaddingSpec),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AnimatedNavigationButtons(
@@ -60,20 +68,22 @@ fun AnimatedFloatingNavBar(
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            
+            Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
+            
             // Animated FAB
             AnimatedVisibility(
                 visible = showFab,
                 enter = scaleIn(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium
+                        dampingRatio = dampingRatio,
+                        stiffness = stiffness
                     )
                 ) + fadeIn(),
                 exit = scaleOut(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
+                        dampingRatio = dampingRatio,
+                        stiffness = stiffness
                     )
                 ) + fadeOut()
             ) {
@@ -93,7 +103,7 @@ fun AnimatedFloatingNavBar(
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
         }
     }
 }
