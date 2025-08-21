@@ -71,7 +71,7 @@ fun AnalysisScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(modifiedPadding)
-                .padding(horizontal = 32.dp)
+                .padding(horizontal = 16.dp)
         ) {
             // histogram
             /*item {

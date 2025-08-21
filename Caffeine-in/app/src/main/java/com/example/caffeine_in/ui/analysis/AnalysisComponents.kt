@@ -57,18 +57,6 @@ fun AnalysisTopBar(
                 fontWeight = FontWeight.Bold,
                 color = textIconColor
             )
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = { navController.navigateUp() }
-            ) {
-                Icon(
-                    modifier = iconModifier,
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = textIconColor
-                )
-            }
         }
     )
 }
