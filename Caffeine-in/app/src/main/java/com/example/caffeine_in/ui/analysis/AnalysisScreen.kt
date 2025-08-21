@@ -1,20 +1,16 @@
 package com.example.caffeine_in.ui.analysis
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,55 +18,38 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.caffeine_in.navigation.Destination
-import com.example.caffeine_in.navigation.ToolBarFAB
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AnalysisScreen(
     analysisViewModel: AnalysisViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
+    paddingValues: PaddingValues = PaddingValues()
 ) {
     val intakeList by analysisViewModel.intakeList.collectAsState()
     val histogramData = analysisViewModel.getHistogramData()
+    
 
-    Scaffold(
-        containerColor = Color(0xFFECE0D1),
-        topBar = {
-            AnalysisTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding(),
-                navController = navController
-            )
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ToolBarFAB(
-                navController = navController,
-                currentRoute = Destination.Analysis.route,
-                showFab = false
-            )
-        }
-    ) { innerPadding ->
-        val modifiedPadding = PaddingValues(
-            top = innerPadding.calculateTopPadding(),
-            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-            bottom = 0.dp
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        AnalysisTopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding(),
+            navController = navController
         )
-
+    
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(modifiedPadding)
                 .padding(horizontal = 16.dp)
         ) {
             // histogram
