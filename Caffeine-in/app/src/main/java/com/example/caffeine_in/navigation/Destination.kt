@@ -1,4 +1,4 @@
-package com.example.caffeine_in.ui.navigation
+package com.example.caffeine_in.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BarChart

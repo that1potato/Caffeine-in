@@ -36,10 +36,8 @@ import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.History
 import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
 import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
-import com.example.caffeine_in.ui.caffeinetracker.components.NewSourceFAB
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
-import com.example.caffeine_in.ui.caffeinetracker.components.TopBar
-import com.example.caffeine_in.ui.navigation.ToolBarFAB
+import com.example.caffeine_in.navigation.ToolBarFAB
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

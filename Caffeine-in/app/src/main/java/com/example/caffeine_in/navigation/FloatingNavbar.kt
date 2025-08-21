@@ -1,4 +1,4 @@
-package com.example.caffeine_in.ui.navigation
+package com.example.caffeine_in.navigation
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
