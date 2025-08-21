@@ -15,22 +15,18 @@ import androidx.navigation.NavController
 
 @ExperimentalMaterial3ExpressiveApi
 @Composable
-fun AnimatedToolBarFAB(
+fun AnimatedFloatingNavBar(
     modifier: Modifier = Modifier,
     navController: NavController,
     currentRoute: String,
     showFab: Boolean = false,
     onFabClick: () -> Unit = {}
 ) {
-    val toolbarColors = FloatingToolbarColors(
-        toolbarContainerColor = Color(0xFFC5B5A6),
-        toolbarContentColor = Color(0xFF38220F),
-        fabContainerColor = Color(0xFFE57825),
-        fabContentColor = Color(0xFF38220F)
-    )
+    val paddingOffset = 12.dp
     
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .offset(y = paddingOffset),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -40,18 +36,22 @@ fun AnimatedToolBarFAB(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
                         stiffness = Spring.StiffnessMedium
                     )
-                ),
+                )
+                .padding(vertical = paddingOffset),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Navigation buttons in custom toolbar
+            Spacer(modifier = Modifier.width(8.dp))
+            // custom toolbar surface
             Surface(
-                shape = MaterialTheme.shapes.extraLarge,
+                shape = MaterialTheme.shapes.extraExtraLarge,
                 color = Color(0xFFC5B5A6),
-                modifier = Modifier.height(64.dp)
+                modifier = Modifier.height(64.dp),
+                shadowElevation = 3.dp,
+                tonalElevation = 3.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AnimatedNavigationButtons(
@@ -60,7 +60,7 @@ fun AnimatedToolBarFAB(
                     )
                 }
             }
-            
+            Spacer(modifier = Modifier.width(8.dp))
             // Animated FAB
             AnimatedVisibility(
                 visible = showFab,
@@ -77,12 +77,15 @@ fun AnimatedToolBarFAB(
                     )
                 ) + fadeOut()
             ) {
-                Spacer(modifier = Modifier.width(8.dp))
                 FloatingActionButton(
                     onClick = onFabClick,
                     containerColor = Color(0xFFE57825),
                     contentColor = Color(0xFF38220F),
-                    modifier = Modifier.size(56.dp)
+                    modifier = Modifier.size(56.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 3.dp,
+                        pressedElevation = 6.dp
+                    )
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -90,6 +93,7 @@ fun AnimatedToolBarFAB(
                     )
                 }
             }
+            Spacer(modifier = Modifier.width(8.dp))
         }
     }
 }
