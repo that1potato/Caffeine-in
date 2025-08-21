@@ -1,6 +1,7 @@
 package com.example.caffeine_in.ui.analysis
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -32,45 +33,31 @@ import androidx.navigation.NavController
 import com.example.caffeine_in.navigation.Destination
 import com.example.caffeine_in.navigation.ToolBarFAB
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AnalysisScreen(
     analysisViewModel: AnalysisViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
+    paddingValues: PaddingValues = PaddingValues()
 ) {
     val intakeList by analysisViewModel.intakeList.collectAsState()
     val histogramData = analysisViewModel.getHistogramData()
+    
 
-    Scaffold(
-        containerColor = Color(0xFFECE0D1),
-        topBar = {
-            AnalysisTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding(),
-                navController = navController
-            )
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ToolBarFAB(
-                navController = navController,
-                currentRoute = Destination.Analysis.route,
-                showFab = false
-            )
-        }
-    ) { innerPadding ->
-        val modifiedPadding = PaddingValues(
-            top = innerPadding.calculateTopPadding(),
-            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-            bottom = 0.dp
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        AnalysisTopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding(),
+            navController = navController
         )
-
+    
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(modifiedPadding)
                 .padding(horizontal = 16.dp)
         ) {
             // histogram

@@ -1,5 +1,6 @@
 package com.example.caffeine_in.ui.settings
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -33,9 +34,11 @@ import com.example.caffeine_in.ui.settings.components.SettingsTopBar
 import com.example.caffeine_in.ui.settings.components.BuyMeACoffee
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    paddingValues: PaddingValues = PaddingValues()
+) {
     val settingsItems = listOf(
         SettingSection("General"),
         //SettingItem("Dark Theme", "Dark mode behaviour"),
@@ -64,36 +67,21 @@ fun SettingsScreen(navController: NavController) {
         )
     )
 
-    Scaffold(
-        containerColor = Color(0xFFECE0D1),
-        topBar = {
-            SettingsTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding(),
-                navController = navController
-            )
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ToolBarFAB(
-                navController = navController,
-                currentRoute = Destination.Settings.route,
-                showFab = false  // No FAB on settings screen
-            )
-        }
-    ) { innerPadding ->
-        val modifiedPadding = PaddingValues(
-            top = innerPadding.calculateTopPadding(),
-            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-            bottom = 0.dp
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        SettingsTopBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding(),
+            navController = navController
         )
-
+    
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(modifiedPadding)
                 .padding(horizontal = 16.dp)
         ) {
             item {
