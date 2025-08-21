@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.CaffeineSource
+import com.example.caffeine_in.navigation.Destination
 import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.History
@@ -108,6 +109,8 @@ fun CaffeineTrackerScreen(
         floatingActionButton = {
             ToolBarFAB(
                 navController = navController,
+                currentRoute = Destination.Tracker.route,
+                showFab = true,
                 onFabClick = { showAddDialog.value = true }
             )
         }
@@ -248,7 +251,7 @@ fun CaffeineTrackerScreen(
             if (showIndicatorDialog.value) {
                 IndicatorDialog(
                     onDismiss = { showIndicatorDialog.value = false },
-                    onConfirm = { navController.navigate("info") }
+                    onConfirm = { navController.navigate(Destination.Info.route) }
                 )
             }
             

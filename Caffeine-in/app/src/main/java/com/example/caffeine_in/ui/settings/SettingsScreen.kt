@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,6 +24,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.SettingItem
 import com.example.caffeine_in.data.SettingSection
+import com.example.caffeine_in.navigation.Destination
+import com.example.caffeine_in.navigation.ToolBarFAB
 import com.example.caffeine_in.ui.settings.components.License
 import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
@@ -29,6 +33,7 @@ import com.example.caffeine_in.ui.settings.components.SettingsTopBar
 import com.example.caffeine_in.ui.settings.components.BuyMeACoffee
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
     val settingsItems = listOf(
@@ -39,7 +44,7 @@ fun SettingsScreen(navController: NavController) {
         SettingItem(
             "About Caffeine Level",
             "Tap to learn more about how the app helps track your caffeine level",
-            onClick = { navController.navigate("info") }
+            onClick = { navController.navigate(Destination.Info.route) }
         ),
         
         //SettingSection("Notification"),
@@ -55,7 +60,7 @@ fun SettingsScreen(navController: NavController) {
         SettingSection("License"),
         SettingItem(
             "Licenses", "Tap to open licenses",
-            onClick = { navController.navigate("licenses") }
+            onClick = { navController.navigate(Destination.Licenses.route) }
         )
     )
 
@@ -67,6 +72,14 @@ fun SettingsScreen(navController: NavController) {
                     .fillMaxWidth()
                     .statusBarsPadding(),
                 navController = navController
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            ToolBarFAB(
+                navController = navController,
+                currentRoute = Destination.Settings.route,
+                showFab = false  // No FAB on settings screen
             )
         }
     ) { innerPadding ->

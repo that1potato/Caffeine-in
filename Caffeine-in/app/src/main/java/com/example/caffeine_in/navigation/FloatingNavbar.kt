@@ -107,54 +107,24 @@ private fun NavigationButtons(
         return if (isSelected) Color(0xFFECE0D1) else Color(0xFF38220F)
     }
     
-    // Analysis button
-    IconButton(
-        colors = getButtonColors(currentRoute == "analysis"),
-        onClick = {
-            if (currentRoute != "analysis") {
-                navController.navigate("analysis")
+    // Generate buttons for each destination in the toolbar
+    toolbarDestinations.forEach { destination ->
+        val isSelected = currentRoute == destination.route
+        
+        IconButton(
+            colors = getButtonColors(isSelected),
+            onClick = {
+                if (!isSelected) {
+                    navController.navigate(destination.route)
+                }
             }
+        ) {
+            Icon(
+                imageVector = destination.icon,
+                contentDescription = destination.label,
+                tint = getIconTint(isSelected),
+                modifier = Modifier.size(24.dp)
+            )
         }
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.AutoGraph,
-            contentDescription = "Analysis",
-            tint = getIconTint(currentRoute == "analysis"),
-            modifier = Modifier.size(24.dp)
-        )
-    }
-    
-    // Tracker button
-    IconButton(
-        colors = getButtonColors(currentRoute == "tracker"),
-        onClick = {
-            if (currentRoute != "tracker") {
-                navController.navigate("tracker")
-            }
-        }
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Coffee,
-            contentDescription = "Tracker",
-            tint = getIconTint(currentRoute == "tracker"),
-            modifier = Modifier.size(24.dp)
-        )
-    }
-    
-    // Settings button
-    IconButton(
-        colors = getButtonColors(currentRoute == "settings"),
-        onClick = {
-            if (currentRoute != "settings") {
-                navController.navigate("settings")
-            }
-        }
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Settings,
-            contentDescription = "Settings",
-            tint = getIconTint(currentRoute == "settings"),
-            modifier = Modifier.size(24.dp)
-        )
     }
 }

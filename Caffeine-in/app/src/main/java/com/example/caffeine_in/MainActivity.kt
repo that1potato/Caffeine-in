@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.caffeine_in.navigation.Destination
 import com.example.caffeine_in.ui.analysis.AnalysisScreen
 import com.example.caffeine_in.ui.caffeinetracker.CaffeineTrackerScreen
 import com.example.caffeine_in.ui.info.InfoScreen
@@ -23,20 +24,20 @@ class MainActivity : ComponentActivity() {
             CaffeineinTheme {
                 Surface {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "tracker") {
-                        composable("tracker") {
+                    NavHost(navController = navController, startDestination = Destination.Tracker.route) {
+                        composable(Destination.Tracker.route) {
                             CaffeineTrackerScreen(navController = navController)
                         }
-                        composable("info") {
+                        composable(Destination.Info.route) {
                             InfoScreen(navController = navController)
                         }
-                        composable("analysis") {
+                        composable(Destination.Analysis.route) {
                             AnalysisScreen(navController = navController)
                         }
-                        composable("settings") {
+                        composable(Destination.Settings.route) {
                             SettingsScreen(navController = navController)
                         }
-                        composable("licenses") {
+                        composable(Destination.Licenses.route) {
                             LicensesScreen(navController = navController)
                         }
                     }
