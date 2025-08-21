@@ -69,8 +69,6 @@ fun AnimatedFloatingNavBar(
                 }
             }
             
-            Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
-            
             // Animated FAB
             AnimatedVisibility(
                 visible = showFab,
@@ -87,20 +85,23 @@ fun AnimatedFloatingNavBar(
                     )
                 ) + fadeOut()
             ) {
-                FloatingActionButton(
-                    onClick = onFabClick,
-                    containerColor = Color(0xFFE57825),
-                    contentColor = Color(0xFF38220F),
-                    modifier = Modifier.size(56.dp),
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 3.dp,
-                        pressedElevation = 6.dp
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add Caffeine"
-                    )
+                Row {
+                    Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
+                    FloatingActionButton(
+                        onClick = onFabClick,
+                        containerColor = Color(0xFFE57825),
+                        contentColor = Color(0xFF38220F),
+                        modifier = Modifier.size(56.dp),
+                        elevation = FloatingActionButtonDefaults.elevation(
+                            defaultElevation = 3.dp,
+                            pressedElevation = 6.dp
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add Caffeine"
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.width(floatingToolbarPaddingSpec))
