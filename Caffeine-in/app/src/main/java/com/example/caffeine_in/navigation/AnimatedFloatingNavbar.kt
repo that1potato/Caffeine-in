@@ -79,7 +79,7 @@ fun AnimatedFloatingNavBar(
                         dampingRatio = dampingRatio,
                         stiffness = stiffness
                     )
-                ) + fadeIn(),
+                ),
                 exit = scaleOut(
                     animationSpec = spring(
                         dampingRatio = dampingRatio,
