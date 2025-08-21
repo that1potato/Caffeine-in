@@ -34,6 +34,3 @@ val bottomDestinations = listOf(
     Destination.Analysis,
     Destination.Settings
 )
-
-class FloatingNavbar {
-}
