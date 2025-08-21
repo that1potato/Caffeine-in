@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -38,14 +37,12 @@ import com.example.caffeine_in.ui.caffeinetracker.components.History
 import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
 import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
-import com.example.caffeine_in.navigation.ToolBarFAB
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CaffeineTrackerScreen(
     caffeineTrackerViewModel: CaffeineTrackerViewModel = viewModel(),
