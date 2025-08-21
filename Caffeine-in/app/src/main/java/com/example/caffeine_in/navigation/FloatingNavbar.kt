@@ -25,7 +25,9 @@ import androidx.navigation.NavController
 fun ToolBarFAB(
     modifier: Modifier = Modifier,
     navController: NavController,
-    onFabClick: () -> Unit,
+    currentRoute: String,
+    showFab: Boolean = false,
+    onFabClick: () -> Unit = {},
     expanded: Boolean = true
 ) {
     val toolbarColors = FloatingToolbarColors(
@@ -35,65 +37,124 @@ fun ToolBarFAB(
         fabContentColor = Color(0xFF38220F)
     )
     
-    HorizontalFloatingToolbar(
-        modifier = modifier,
-        expanded = expanded,
-        colors = toolbarColors,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onFabClick,
-                containerColor = Color(0xFFE57825),
-                contentColor = Color(0xFF38220F)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Caffeine"
+    if (showFab) {
+        HorizontalFloatingToolbar(
+            modifier = modifier,
+            expanded = expanded,
+            colors = toolbarColors,
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = onFabClick,
+                    containerColor = Color(0xFFE57825),
+                    contentColor = Color(0xFF38220F)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add Caffeine"
+                    )
+                }
+            },
+            floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.End,
+            content = {
+                NavigationButtons(
+                    navController = navController,
+                    currentRoute = currentRoute
                 )
             }
-        },
-        floatingActionButtonPosition = FloatingToolbarHorizontalFabPosition.End,
-        content = {
-            // Analysis button
-            IconButton(
-                onClick = { navController.navigate("analysis") }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.AutoGraph,
-                    contentDescription = "Analysis",
-                    tint = Color(0xFF38220F),
-                    modifier = Modifier.size(24.dp)
+        )
+    } else {
+        HorizontalFloatingToolbar(
+            modifier = modifier,
+            expanded = expanded,
+            colors = toolbarColors,
+            content = {
+                NavigationButtons(
+                    navController = navController,
+                    currentRoute = currentRoute
                 )
             }
-            
-            // Tracker button
-            IconButton(
-                colors = IconButtonColors(
-                    containerColor = Color(0xFF38220F),
-                    contentColor = Color(0xFF38220F),
-                    disabledContainerColor = Color(0xFFC5B5A6),
-                    disabledContentColor = Color(0xFF38220F)
-                ),
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Coffee,
-                    contentDescription = "Tracker",
-                    tint = Color(0xFFECE0D1),
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            
-            // Settings button
-            IconButton(
-                onClick = { navController.navigate("settings") }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
-                    tint = Color(0xFF38220F),
-                    modifier = Modifier.size(24.dp)
-                )
+        )
+    }
+}
+
+@Composable
+private fun NavigationButtons(
+    navController: NavController,
+    currentRoute: String
+) {
+    // Helper function to determine button colors based on selection
+    @Composable
+    fun getButtonColors(isSelected: Boolean): IconButtonColors {
+        return if (isSelected) {
+            IconButtonColors(
+                containerColor = Color(0xFF38220F),
+                contentColor = Color(0xFFECE0D1),
+                disabledContainerColor = Color(0xFF38220F),
+                disabledContentColor = Color(0xFFECE0D1)
+            )
+        } else {
+            IconButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color(0xFF38220F),
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = Color(0xFF38220F)
+            )
+        }
+    }
+    
+    // Helper function to get icon tint based on selection
+    fun getIconTint(isSelected: Boolean): Color {
+        return if (isSelected) Color(0xFFECE0D1) else Color(0xFF38220F)
+    }
+    
+    // Analysis button
+    IconButton(
+        colors = getButtonColors(currentRoute == "analysis"),
+        onClick = {
+            if (currentRoute != "analysis") {
+                navController.navigate("analysis")
             }
         }
-    )
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.AutoGraph,
+            contentDescription = "Analysis",
+            tint = getIconTint(currentRoute == "analysis"),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+    
+    // Tracker button
+    IconButton(
+        colors = getButtonColors(currentRoute == "tracker"),
+        onClick = {
+            if (currentRoute != "tracker") {
+                navController.navigate("tracker")
+            }
+        }
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Coffee,
+            contentDescription = "Tracker",
+            tint = getIconTint(currentRoute == "tracker"),
+            modifier = Modifier.size(24.dp)
+        )
+    }
+    
+    // Settings button
+    IconButton(
+        colors = getButtonColors(currentRoute == "settings"),
+        onClick = {
+            if (currentRoute != "settings") {
+                navController.navigate("settings")
+            }
+        }
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Settings,
+            contentDescription = "Settings",
+            tint = getIconTint(currentRoute == "settings"),
+            modifier = Modifier.size(24.dp)
+        )
+    }
 }
