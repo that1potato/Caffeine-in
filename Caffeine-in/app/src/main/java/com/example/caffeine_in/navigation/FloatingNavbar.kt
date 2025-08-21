@@ -3,9 +3,6 @@ package com.example.caffeine_in.navigation
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.AutoGraph
-import androidx.compose.material.icons.outlined.Coffee
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarColors
@@ -115,7 +112,26 @@ private fun NavigationButtons(
             colors = getButtonColors(isSelected),
             onClick = {
                 if (!isSelected) {
-                    navController.navigate(destination.route)
+                    when (destination.route) {
+                        Destination.Tracker.route -> {
+                            // Navigate to tracker and clear back stack
+                            navController.navigate(destination.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                        else -> {
+                            // For Analysis and Settings, use launchSingleTop to avoid stacking
+                            navController.navigate(destination.route) {
+                                popUpTo(Destination.Tracker.route) {
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
                 }
             }
         ) {
