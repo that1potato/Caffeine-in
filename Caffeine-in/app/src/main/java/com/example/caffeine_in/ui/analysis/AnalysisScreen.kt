@@ -1,7 +1,6 @@
 package com.example.caffeine_in.ui.analysis
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.caffeine_in.ui.analysis.components.AnalysisTopBar
+import com.example.caffeine_in.ui.analysis.components.IntakeHistoryItem
 
 @Composable
 fun AnalysisScreen(
