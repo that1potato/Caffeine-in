@@ -66,8 +66,7 @@ fun SettingsScreen(
             SettingsTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding(),
-                navController = navController
+                    .statusBarsPadding()
             )
         }
     ) { innerPadding ->
