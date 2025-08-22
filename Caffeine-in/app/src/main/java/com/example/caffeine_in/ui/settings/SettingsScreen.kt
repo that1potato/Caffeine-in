@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,10 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.data.SettingItem
-import com.example.caffeine_in.data.SettingSection
 import com.example.caffeine_in.navigation.Destination
 import com.example.caffeine_in.ui.settings.components.License
-import com.example.caffeine_in.ui.settings.components.SettingsRow
 import com.example.caffeine_in.ui.settings.components.SettingsSectionHeader
 import com.example.caffeine_in.ui.settings.components.SettingsTopBar
 import com.example.caffeine_in.ui.settings.components.BuyMeACoffee
