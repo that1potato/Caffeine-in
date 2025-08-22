@@ -52,7 +52,7 @@ fun AnalysisScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(
-                    top = paddingValues.calculateTopPadding(),
+                    top = 0.dp,
                     start = 16.dp,
                     end = 16.dp,
                     bottom = paddingValues.calculateBottomPadding()
