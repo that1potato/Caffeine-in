@@ -43,10 +43,8 @@ import kotlin.math.max
 @Composable
 fun AnalysisTopBar(
     modifier: Modifier,
-    navController: NavController
 ) {
     val textIconColor = Color(0xFF38220F)
-    val iconModifier = Modifier.size(24.dp)
 
     TopAppBar(
         modifier = modifier,

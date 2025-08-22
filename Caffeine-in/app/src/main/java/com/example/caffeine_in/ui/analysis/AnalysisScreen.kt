@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,23 +35,27 @@ fun AnalysisScreen(
     val intakeList by analysisViewModel.intakeList.collectAsState()
     val histogramData = analysisViewModel.getHistogramData()
     
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-    ) {
-        AnalysisTopBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding(),
-            navController = navController
-        )
     
+    Scaffold(
+        containerColor = Color(0xFFECE0D1),
+        topBar = {
+            AnalysisTopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+            )
+        }
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(innerPadding)
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = paddingValues.calculateBottomPadding()
+                )
         ) {
             // histogram
             /*item {
