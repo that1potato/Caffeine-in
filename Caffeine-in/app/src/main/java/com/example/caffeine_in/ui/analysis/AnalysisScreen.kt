@@ -82,7 +82,7 @@ fun AnalysisScreen(
             }*/
 
             // intake history
-            item {
+            /*item {
                 Text(
                     text = "Intake History",
                     fontSize = 18.sp,
@@ -90,7 +90,7 @@ fun AnalysisScreen(
                     color = Color(0xFF38220F),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-            }
+            }*/
             
             if (intakeList.isEmpty()) {
                 item {
