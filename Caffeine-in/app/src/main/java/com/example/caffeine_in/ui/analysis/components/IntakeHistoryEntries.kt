@@ -32,18 +32,37 @@ import java.util.Locale
 
 @Composable
 fun PerDaySection(
-
+    date: String,
+    intakes: List<CaffeineIntake>
 ) {
     Card(
         modifier = Modifier
-            .padding(16.dp),
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1)),
         border = BorderStroke(width = 1.dp, color = Color(0xFF967259))
     ) {
-        Text("Today") // date, "today" if today
-        Column{
-            // history entries today
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = date,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color(0xFF38220F),
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            
+            intakes.forEachIndexed { index, intake ->
+                IntakeHistoryItem(intake = intake)
+                if (index < intakes.lastIndex) {
+                    HorizontalDivider(
+                        color = Color(0x3F967259),
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -51,14 +70,16 @@ fun PerDaySection(
 @Composable
 fun IntakeHistoryItem(
     intake: CaffeineIntake,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showDate: Boolean = false
 ) {
-    val dateFormatter = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
+    val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val dateTimeFormatter = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
     
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = if (showDate) 12.dp else 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -78,7 +99,11 @@ fun IntakeHistoryItem(
         Spacer(modifier = Modifier.width(16.dp))
         
         Text(
-            text = dateFormatter.format(Date(intake.timestampMillis)),
+            text = if (showDate) {
+                dateTimeFormatter.format(Date(intake.timestampMillis))
+            } else {
+                timeFormatter.format(Date(intake.timestampMillis))
+            },
             fontSize = 14.sp,
             color = Color(0xFF967259),
             fontWeight = FontWeight.Medium

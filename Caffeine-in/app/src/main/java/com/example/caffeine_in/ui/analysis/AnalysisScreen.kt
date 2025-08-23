@@ -26,6 +26,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.caffeine_in.ui.analysis.components.AnalysisTopBar
 import com.example.caffeine_in.ui.analysis.components.IntakeHistoryItem
+import com.example.caffeine_in.ui.analysis.components.PerDaySection
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun AnalysisScreen(
@@ -87,6 +91,7 @@ fun AnalysisScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
+            
             if (intakeList.isEmpty()) {
                 item {
                     Box(
@@ -104,12 +109,46 @@ fun AnalysisScreen(
                     }
                 }
             } else {
-                items(intakeList.size) { index ->
-                    IntakeHistoryItem(
-                        intake = intakeList[index]
-                    )
-                    if (index < intakeList.lastIndex) {
-                        HorizontalDivider(color = Color(0x5F967259))
+                // Group intakes by day
+                val groupedIntakes = intakeList.groupBy { intake ->
+                    val calendar = java.util.Calendar.getInstance()
+                    calendar.timeInMillis = intake.timestampMillis
+                    // Reset time to start of day for grouping
+                    calendar.set(java.util.Calendar.HOUR_OF_DAY, 0)
+                    calendar.set(java.util.Calendar.MINUTE, 0)
+                    calendar.set(java.util.Calendar.SECOND, 0)
+                    calendar.set(java.util.Calendar.MILLISECOND, 0)
+                    calendar.timeInMillis
+                }.toSortedMap(compareByDescending { it }) // Sort by date descending (newest first)
+                
+                val dateFormatter = SimpleDateFormat("EEEE, MMM dd", Locale.getDefault())
+                val today = java.util.Calendar.getInstance()
+                today.set(java.util.Calendar.HOUR_OF_DAY, 0)
+                today.set(java.util.Calendar.MINUTE, 0)
+                today.set(java.util.Calendar.SECOND, 0)
+                today.set(java.util.Calendar.MILLISECOND, 0)
+                val todayMillis = today.timeInMillis
+                
+                val yesterday = java.util.Calendar.getInstance()
+                yesterday.add(java.util.Calendar.DAY_OF_YEAR, -1)
+                yesterday.set(java.util.Calendar.HOUR_OF_DAY, 0)
+                yesterday.set(java.util.Calendar.MINUTE, 0)
+                yesterday.set(java.util.Calendar.SECOND, 0)
+                yesterday.set(java.util.Calendar.MILLISECOND, 0)
+                val yesterdayMillis = yesterday.timeInMillis
+                
+                groupedIntakes.forEach { (dateMillis, dayIntakes) ->
+                    item {
+                        val dateLabel = when (dateMillis) {
+                            todayMillis -> "Today"
+                            yesterdayMillis -> "Yesterday"
+                            else -> dateFormatter.format(Date(dateMillis))
+                        }
+                        
+                        PerDaySection(
+                            date = dateLabel,
+                            intakes = dayIntakes.sortedByDescending { it.timestampMillis }
+                        )
                     }
                 }
             }
