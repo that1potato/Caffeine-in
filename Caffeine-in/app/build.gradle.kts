@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "io.github.that1potato.caffeine_in"
+    namespace = "com.example.caffeine_in"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "io.github.that1potato.caffeine_in"
+        applicationId = "com.example.caffeine_in"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
