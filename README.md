@@ -1,12 +1,14 @@
 # Caffeine-in ☕
 
-> A modern Android app that helps you monitor your approximate caffeine intake and blood caffeine levels in real-time.
+> A modern native Android app that helps you monitor your approximate caffeine intake and blood caffeine levels in real-time.
+>
+> **Minimum SDK**: Android 8.0 (API level 26)
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=26)
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
-<some images here>
+<!-- Placeholder for screenshots -->
 
 ## ✨ Features
 
@@ -36,40 +38,12 @@
 -   **Undo/Redo**: Made a mistake? Easily undo your last action
 -   **Edit & delete**: Manage your caffeine sources with inline editing
 
-## 🚀 Screenshots & Demos
-
-> 📸 Screenshots and GIFs showcasing the fluid animations and interface will be added here
-
-<!-- Placeholder for screenshots -->
-
-| Main Tracker  | Analysis View | Settings      |
-| ------------- | ------------- | ------------- |
-| _Coming Soon_ | _Coming Soon_ | _Coming Soon_ |
-
-<!-- Placeholder for GIFs -->
-
-### 🎬 Animations Preview
-
--   **Real-time decay animation** - _GIF coming soon_
--   **Floating navigation bar** - _GIF coming soon_
--   **Smooth transitions** - _GIF coming soon_
-
-## 📱 Requirements
-
--   **Minimum SDK**: Android 8.0 (API level 26)
--   **Target SDK**: Android 14 (API level 34)
--   **Compile SDK**: Android 14 (API level 36)
-
 ## 🧮 The Science Behind It
 
 The app uses the **pharmacokinetic principle** of caffeine metabolism based on peer-reviewed research:
 
--   **Half-life**: ~5-5.7 hours for healthy adults¹²
--   **Elimination**: First-order kinetics (exponential decay)
--   **Formula**: `Current Level = Initial × (0.5)^(time_elapsed / half_life)`
+-   **Half-life**: mean value of 5 hours for healthy adults¹²
 -   **Individual variation**: 1.5-9.5 hours depending on factors like genetics, smoking, pregnancy²
-
-This provides a scientifically-backed estimation of your blood caffeine levels throughout the day.
 
 ### 📚 References
 
