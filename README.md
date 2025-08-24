@@ -3,6 +3,8 @@
 > A modern native Android app that helps you monitor your approximate caffeine intake and blood caffeine levels in real-time.
 >
 > **Minimum SDK**: Android 8.0 (API level 26)
+>
+> **Current State**: Prototype
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=26)
