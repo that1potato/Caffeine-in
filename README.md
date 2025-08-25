@@ -1,4 +1,4 @@
-i# Caffeine-in ☕
+# Caffeine-in ☕
 
 > A modern native Android app that helps you monitor your approximate caffeine intake and blood caffeine levels in real-time.
 
