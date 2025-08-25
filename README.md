@@ -12,6 +12,10 @@
 
 <!-- Placeholder for screenshots -->
 
+<p align="center">
+  <img src="assets/grid.gif" alt="Grid GIF">
+</p>
+
 ## ✨ Features
 
 ### 🩸 Real-time Caffeine Level Estimation
