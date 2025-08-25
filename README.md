@@ -1,4 +1,4 @@
-# Caffeine-in ☕
+i# Caffeine-in ☕
 
 > A modern native Android app that helps you monitor your approximate caffeine intake and blood caffeine levels in real-time.
 
@@ -11,6 +11,10 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
 <!-- Placeholder for screenshots -->
+
+<p align="center">
+  <img src="assets/grid.gif" alt="Grid GIF">
+</p>
 
 ## ✨ Features
 
