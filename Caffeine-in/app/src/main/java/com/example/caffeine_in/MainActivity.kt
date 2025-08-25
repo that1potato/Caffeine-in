@@ -100,14 +100,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Destination.Analysis.route) {
                             AnalysisScreen(
-                                navController = navController,
-                                paddingValues = modifiedPadding
+                                navController = navController
                             )
                         }
                         composable(Destination.Settings.route) {
                             SettingsScreen(
-                                navController = navController,
-                                paddingValues = modifiedPadding
+                                navController = navController
                             )
                         }
                         composable(Destination.Info.route) {

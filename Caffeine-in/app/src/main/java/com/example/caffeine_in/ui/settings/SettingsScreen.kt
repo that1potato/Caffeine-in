@@ -27,30 +27,29 @@ import com.example.caffeine_in.ui.theme.CaffeineinTheme
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
-    paddingValues: PaddingValues = PaddingValues()
+    navController: NavController
 ) {
     val settingsSections = mapOf(
         "General" to listOf(
-            //SettingItem("Dark Theme", "Dark mode behaviour"),
-            //SettingItem("Material You Colors", "Turn Material You colors on/off"),
-            //SettingItem("Bedtime Schedule", "Set your bedtime schedule"),
+            /*SettingItem("Dark Theme", "Dark mode behaviour"),
+            SettingItem("Material You Colors", "Turn Material You colors on/off"),
+            SettingItem("Bedtime Schedule", "Set your bedtime schedule"),*/
             SettingItem(
                 "About Caffeine Level",
                 "Tap to learn more about how the app helps track your caffeine level",
                 onClick = { navController.navigate(Destination.Info.route) }
             )
         ),
-        //"Notification" to listOf(
-            //SettingItem("HAHAHA"),
-        //),
+        /*"Notification" to listOf(
+            SettingItem("HAHAHA"),
+        ),*/
         //"Widget" to listOf(
             //SettingItem("HAHAHA"),
         //),
-        //"Data & Privacy" to listOf(
-            //SettingItem("Reset Caffeine Level", "Reset caffeine level to 0mg"),
-            //SettingItem("Privacy Statement"),
-        //),
+        /*"Data & Privacy" to listOf(
+            SettingItem("Reset Caffeine Level", "Reset caffeine level to 0mg"),
+            SettingItem("Privacy Statement"),
+        ),*/
         "License" to listOf(
             SettingItem(
                 "Licenses",
@@ -70,16 +69,17 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
+        val modifiedPadding = PaddingValues(
+            top = innerPadding.calculateTopPadding(),
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 0.dp
+        )
+        
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(
-                    top = 0.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+                .padding(modifiedPadding)
         ) {
             item {
                 BuyMeACoffee()

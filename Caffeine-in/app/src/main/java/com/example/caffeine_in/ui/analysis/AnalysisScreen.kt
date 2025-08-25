@@ -3,6 +3,8 @@ package com.example.caffeine_in.ui.analysis
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,8 +32,7 @@ import com.example.caffeine_in.ui.analysis.utils.groupByDay
 @Composable
 fun AnalysisScreen(
     analysisViewModel: AnalysisViewModel = viewModel(),
-    navController: NavController,
-    paddingValues: PaddingValues = PaddingValues()
+    navController: NavController
 ) {
     val intakeList by analysisViewModel.intakeList.collectAsState()
     //val histogramData = analysisViewModel.getHistogramData()
@@ -46,16 +48,17 @@ fun AnalysisScreen(
             )
         }
     ) { innerPadding ->
+        val modifiedPadding = PaddingValues(
+            top = innerPadding.calculateTopPadding(),
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 0.dp
+        )
+        
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(
-                    top = 0.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+                .padding(modifiedPadding)
         ) {
             // histogram
             /*item {
