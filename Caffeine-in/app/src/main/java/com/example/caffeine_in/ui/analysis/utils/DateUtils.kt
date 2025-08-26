@@ -13,7 +13,7 @@ fun List<CaffeineIntake>.groupByDay(): List<GroupedIntake> {
     if (isEmpty()) return emptyList()
     
     val calendar = Calendar.getInstance()
-    val dateFormatter = SimpleDateFormat("EEEE, MMM dd", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("EEEE ❘ MMM dd", Locale.getDefault())
     
     // Group by day
     val grouped = groupBy { intake ->
