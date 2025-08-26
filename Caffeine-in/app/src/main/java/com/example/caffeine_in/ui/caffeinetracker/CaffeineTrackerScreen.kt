@@ -172,7 +172,7 @@ fun CaffeineTrackerScreen(
                                             val result = snackbarHostState.showSnackbar(
                                                 message = "${source.name} logged",
                                                 actionLabel = "Undo",
-                                                duration = SnackbarDuration.Long
+                                                duration = SnackbarDuration.Short
                                             )
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 caffeineTrackerViewModel.undoLastCaffeineAddition()
@@ -186,7 +186,7 @@ fun CaffeineTrackerScreen(
                                             val result = snackbarHostState.showSnackbar(
                                                 message = "${sourceToDelete.name} removed",
                                                 actionLabel = "Undo",
-                                                duration = SnackbarDuration.Long
+                                                duration = SnackbarDuration.Short
                                             )
                                             if (result == SnackbarResult.ActionPerformed) {
                                                 caffeineTrackerViewModel.undoDeleteCaffeineSource()
@@ -213,6 +213,7 @@ fun CaffeineTrackerScreen(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter)
                 .absoluteOffset(y = (-112).dp)
+                .padding(horizontal = 16.dp)
         )
     }
     
@@ -239,7 +240,7 @@ fun CaffeineTrackerScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = "$name added and logged",
                         actionLabel = "Undo",
-                        duration = SnackbarDuration.Long
+                        duration = SnackbarDuration.Short
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         caffeineTrackerViewModel.removeCaffeineSource(CaffeineSource(name, amount))
