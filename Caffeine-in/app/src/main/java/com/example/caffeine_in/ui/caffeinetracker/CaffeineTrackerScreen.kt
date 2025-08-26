@@ -212,6 +212,7 @@ fun CaffeineTrackerScreen(
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter)
+                .absoluteOffset(y = (-112).dp)
         )
     }
     
