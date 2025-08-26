@@ -102,24 +102,19 @@ fun CaffeineTrackerScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // --- Today's Section ---
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TodaysTotalSection(
-                    animatedProgress = animatedProgress,
-                    caffeineAmount = displayedCaffeineMg,
-                    onInfoClick = { showIndicatorDialog.value = true }
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-            }
+            TodaysTotalSection(
+                animatedProgress = animatedProgress,
+                caffeineAmount = displayedCaffeineMg,
+                onInfoClick = { showIndicatorDialog.value = true }
+            )
             
             // --- history Section ---
             Column(modifier = Modifier.animateContentSize()) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     horizontalArrangement = Arrangement.Start
                 ) {
@@ -129,13 +124,9 @@ fun CaffeineTrackerScreen(
                         onEditClick = { isEditMode = !isEditMode }
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 0.dp
-                    ),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     state = listState,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
