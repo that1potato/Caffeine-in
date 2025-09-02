@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -124,27 +125,26 @@ fun IndicatorButton(
 ) {
     Button(
         onClick = onInfoClick,
-        //modifier = Modifier.size(16.dp),
+        border = BorderStroke(0.5.dp, Color(0xFF70B058)), // should match the color in the info page
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
-        contentPadding = PaddingValues(horizontal = 0.dp)
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
     ) {
         Row(
-            modifier = Modifier.padding(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircleOutline, // should match the icon in the info page
+                contentDescription = "Indicator Icon",
+                tint = Color(0xFF70B058), // should match the color in the info page
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Caffeine Level",
+                text = "NORMAL", // should match the band in the info page
                 maxLines = 1,
                 color = Color(0xFF967259),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = "Info",
-                tint = Color(0xFF967259),
-                modifier = Modifier.size(18.dp)
             )
         }
     }
