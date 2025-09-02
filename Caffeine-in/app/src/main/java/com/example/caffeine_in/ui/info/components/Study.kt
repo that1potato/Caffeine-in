@@ -49,7 +49,7 @@ fun CaffeineStudy() {
             withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append("Half-life\n") }
             append("Mean value of 5 hours for healthy adults¹².\n\n")
             withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append("Individual variation\n") }
-            append("1.5-9.5 hours depending on factors like genetics, smoking, pregnancy².\n")
+            append("1.5~9.5 hours depending on factors like genetics, smoking, pregnancy².\n")
         },
         fontSize = 14.sp,
         color = Color(0xFF38220F)
