@@ -1,4 +1,4 @@
-package com.example.caffeine_in.data
+package com.example.caffeine_in.caffeineBand
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircleOutline
