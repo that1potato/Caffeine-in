@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +41,7 @@ fun Normal() {
             .fillMaxWidth()
             .border(
                 1.dp,
-                Color(0xFF8BBD78),
+                Color(0xFF70B058),
                 RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
@@ -55,6 +61,12 @@ fun Normal() {
                     color = Color(0xFF38220F)
                 )
             }
+            Icon(
+                imageVector = Icons.Filled.CheckCircleOutline,
+                tint = Color(0xFF70B058),
+                contentDescription = "Normal Icon",
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
@@ -66,7 +78,7 @@ fun Caution() {
             .fillMaxWidth()
             .border(
                 1.dp,
-                Color(0xFFEFAB00),
+                Color(0xFFF3A800),
                 RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
@@ -86,6 +98,12 @@ fun Caution() {
                     color = Color(0xFF38220F)
                 )
             }
+            Icon(
+                imageVector = Icons.Filled.ErrorOutline,
+                tint = Color(0xFFF3A800),
+                contentDescription = "Normal Icon",
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
@@ -117,6 +135,12 @@ fun Warning() {
                     color = Color(0xFF38220F)
                 )
             }
+            Icon(
+                imageVector = Icons.Filled.WarningAmber,
+                tint = Color(0xFFE53935),
+                contentDescription = "Normal Icon",
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }
