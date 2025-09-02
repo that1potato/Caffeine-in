@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.caffeine_in.ui.caffeinetracker.MAX_CAFFEINE_AMOUNT
 import kotlin.math.roundToInt
 
@@ -102,92 +101,101 @@ fun TodaysTotalSection(
         label = "WaveLengthAnimation"
     )
     
-    /*val targetFontSize = when {
-        caffeineAmount.roundToInt() < 1000 -> 80.sp
-        caffeineAmount.roundToInt() < 10000 -> 78.sp
-        caffeineAmount.roundToInt() < 100000 -> 75.sp
-        else -> 72.sp
-    }*/
-    
-    /*val animatedFontSize by animateDpAsState(
-        targetValue = targetFontSize.value.dp, // Use the targetFontSize determined above
-        label = "FontSizeAnimation",
-        animationSpec = tween(durationMillis = 300)
-    )*/
-    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(IntrinsicSize.Max)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        // ---- info ----
-        Button(
-            onClick = onInfoClick,
-            //modifier = Modifier.size(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
-            contentPadding = PaddingValues(horizontal = 0.dp)
-        ) {
-            Row(
-                modifier = Modifier.padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Caffeine Level",
-                    maxLines = 1,
-                    color = Color(0xFF967259),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = "Info",
-                    tint = Color(0xFF967259),
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-        }
+        IndicatorButton(onInfoClick = onInfoClick)
         Spacer(modifier = Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.Bottom) {
-            AnimatedContent(
-                targetState = caffeineAmount.roundToInt(),
-                transitionSpec = {
-                    if (targetState > initialState) {
-                        slideInVertically { height -> height } + fadeIn() togetherWith
-                                slideOutVertically { height -> -height } + fadeOut()
-                    } else {
-                        slideInVertically { height -> -height } + fadeIn() togetherWith
-                                slideOutVertically { height -> height } + fadeOut()
-                    }
-                },
-                label = "CaffeineAmountNumberAnimation"
-            ) { targetCaffeineAmount ->
-                Text(
-                    text = "$targetCaffeineAmount",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 80.sp,
-                    maxLines = 1,
-                    color = Color(0xFF38220F)
-                )
-            }
-            Text( // Static "mg" unit
-                text = "mg",
-                fontWeight = FontWeight.Bold,
-                fontSize = 80.sp,
-                maxLines = 1,
-                color = Color(0xFF38220F),
-                modifier = Modifier.padding(start = 4.dp) // Add a small space
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        LinearWavyProgressIndicator(
-            progress = { animatedProgress },
-            amplitude = { 1f },
-            waveSpeed = animatedWaveSpeed.dp,
-            wavelength = animatedWaveLength.dp,
-            color = Color(0xFF967259),
-            modifier = Modifier.fillMaxWidth()
+        CaffeineIndex(
+            animatedProgress = animatedProgress,
+            caffeineAmount = caffeineAmount,
+            animatedWaveSpeed = animatedWaveSpeed,
+            animatedWaveLength = animatedWaveLength
         )
         Spacer(modifier = Modifier.height(24.dp))
     }
+}
+
+@Composable
+fun IndicatorButton(
+    onInfoClick: () -> Unit
+) {
+    Button(
+        onClick = onInfoClick,
+        //modifier = Modifier.size(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
+        contentPadding = PaddingValues(horizontal = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Caffeine Level",
+                maxLines = 1,
+                color = Color(0xFF967259),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = "Info",
+                tint = Color(0xFF967259),
+                modifier = Modifier.size(18.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun CaffeineIndex(
+    animatedProgress: Float,
+    caffeineAmount: Float,
+    animatedWaveSpeed: Float,
+    animatedWaveLength: Float
+) {
+    Row(verticalAlignment = Alignment.Bottom) {
+        AnimatedContent(
+            targetState = caffeineAmount.roundToInt(),
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInVertically { height -> height } + fadeIn() togetherWith
+                            slideOutVertically { height -> -height } + fadeOut()
+                } else {
+                    slideInVertically { height -> -height } + fadeIn() togetherWith
+                            slideOutVertically { height -> height } + fadeOut()
+                }
+            },
+            label = "CaffeineAmountNumberAnimation"
+        ) { targetCaffeineAmount ->
+            Text(
+                text = "$targetCaffeineAmount",
+                fontWeight = FontWeight.Bold,
+                fontSize = 80.sp,
+                maxLines = 1,
+                color = Color(0xFF38220F)
+            )
+        }
+        Text( // Static "mg" unit
+            text = "mg",
+            fontWeight = FontWeight.Bold,
+            fontSize = 80.sp,
+            maxLines = 1,
+            color = Color(0xFF38220F),
+            modifier = Modifier.padding(start = 4.dp) // Add a small space
+        )
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+    LinearWavyProgressIndicator(
+        progress = { animatedProgress },
+        amplitude = { 1f },
+        waveSpeed = animatedWaveSpeed.dp,
+        wavelength = animatedWaveLength.dp,
+        color = Color(0xFF967259),
+        modifier = Modifier.fillMaxWidth()
+    )
 }
