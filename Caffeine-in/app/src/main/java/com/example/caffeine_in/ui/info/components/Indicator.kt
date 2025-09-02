@@ -1,5 +1,6 @@
 package com.example.caffeine_in.ui.info.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,11 +21,25 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun Indicator() {
+    Normal()
+    Spacer(modifier = Modifier.height(12.dp))
+    Caution()
+    Spacer(modifier = Modifier.height(12.dp))
+    Warning()
+}
+
+@Composable
+fun Normal() {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                Color(0xFF8BBD78),
+                RoundedCornerShape(16.dp)
+            ),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(Color(0xFF8BBD78))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1))
     ) {
         Row(
             modifier = Modifier
@@ -34,7 +49,7 @@ fun Indicator() {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Normal",
+                    text = "Normal  ❘ ≤ 400mg/24h",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = Color(0xFF38220F)
@@ -42,12 +57,20 @@ fun Indicator() {
             }
         }
     }
-    Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Composable
+fun Caution() {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                Color(0xFFEFAB00),
+                RoundedCornerShape(16.dp)
+            ),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF6D484))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1))
     ) {
         Row(
             modifier = Modifier
@@ -57,7 +80,7 @@ fun Indicator() {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Caution",
+                    text = "Caution ❘ 400~600mg/24h",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = Color(0xFF38220F)
@@ -65,12 +88,20 @@ fun Indicator() {
             }
         }
     }
-    Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Composable
+fun Warning() {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(
+                1.dp,
+                Color(0xFFE53935),
+                RoundedCornerShape(16.dp)
+            ),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE53935))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1))
     ) {
         Row(
             modifier = Modifier
@@ -80,7 +111,7 @@ fun Indicator() {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Warning",
+                    text = "Warning ❘ > 600mg/24h",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     color = Color(0xFF38220F)
