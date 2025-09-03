@@ -29,13 +29,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.caffeine_in.caffeineBand.CaffeineBand
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.navigation.Destination
-import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
-import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.AddNewCaffeineDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.EditCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.History
 import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
-import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
@@ -58,6 +59,10 @@ fun CaffeineTrackerScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val shouldScrollToTop by caffeineTrackerViewModel.scrollToTopEvent.collectAsState()
+    val totalIntake24Hours by caffeineTrackerViewModel.totalIntake24Hours
+    
+    // get the current caffeine band to indicate
+    val currentBand = CaffeineBand.getBand(totalIntake24Hours.toDouble())
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -109,6 +114,7 @@ fun CaffeineTrackerScreen(
             TodaysTotalSection(
                 animatedProgress = animatedProgress,
                 caffeineAmount = displayedCaffeineMg,
+                currentBand = currentBand,
                 onInfoClick = { showIndicatorDialog.value = true }
             )
             
@@ -213,6 +219,7 @@ fun CaffeineTrackerScreen(
     // ---- indicator dialog ----
     if (showIndicatorDialog.value) {
         IndicatorDialog(
+            currentBand = currentBand,
             onDismiss = { showIndicatorDialog.value = false },
             onConfirm = { navController.navigate(Destination.Info.route) }
         )

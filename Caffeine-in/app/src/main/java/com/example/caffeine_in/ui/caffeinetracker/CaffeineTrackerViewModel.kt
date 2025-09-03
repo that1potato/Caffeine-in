@@ -14,7 +14,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
@@ -51,6 +54,10 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
 
     private val _scrollToTopEvent = MutableStateFlow(false)
     val scrollToTopEvent: StateFlow<Boolean> = _scrollToTopEvent.asStateFlow()
+    
+    // caffeine band calculation
+    private val _totalIntake24Hours = mutableFloatStateOf(0f)
+    val totalIntake24Hours: State<Float> = _totalIntake24Hours
 
     init {
         // preload showcase data if empty && first time launching
@@ -79,6 +86,8 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
                 _historyList.value = history
             }
         }
+        
+        calculate24HourTotal()
     }
 
     private fun loadAndStart() {
@@ -264,5 +273,33 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     override fun onCleared() {
         super.onCleared()
         decayCalculationJob?.cancel()
+    }
+    
+    // sums the caffeine intake in the last 24 hours
+    private fun calculate24HourTotal() {
+        viewModelScope.launch {
+            val tickerFlow = flow {
+                while (true) {
+                    emit(Unit)
+                    delay(60_000L) // Emit every minute
+                }
+            }
+            
+            tickerFlow
+                .combine(dataRepository.intakeListFlow) { _, intakes ->
+                    val currentTime = System.currentTimeMillis()
+                    val twentyFourHoursAgo = currentTime - (24 * 60 * 60 * 1000L)
+                    //val twentyFourSecsAgo = currentTime - (24 * 1000L) // for debugging
+                    
+                    intakes
+                        .filter { it.timestampMillis >= twentyFourHoursAgo }
+                        .sumOf { it.amount }
+                        .toFloat()
+                }
+                .distinctUntilChanged() // Only update if the value actually changed
+                .collect { total ->
+                    _totalIntake24Hours.floatValue = total
+                }
+        }
     }
 }

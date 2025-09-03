@@ -1,18 +1,15 @@
 package com.example.caffeine_in.ui.info.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircleOutline
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,61 +21,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.caffeine_in.caffeineBand.CaffeineBand
 
 @Composable
 fun Indicator() {
-    Normal()
-    Spacer(modifier = Modifier.height(12.dp))
-    Caution()
-    Spacer(modifier = Modifier.height(12.dp))
-    Warning()
-}
-
-@Composable
-fun Normal() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                1.dp,
-                Color(0xFF70B058),
-                RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Normal  ❘ ≤ 400mg/24h",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Color(0xFF38220F)
-                )
-            }
-            Icon(
-                imageVector = Icons.Filled.CheckCircleOutline,
-                tint = Color(0xFF70B058),
-                contentDescription = "Normal Icon",
-                modifier = Modifier.size(24.dp)
-            )
+    val caffeineBands = listOf(CaffeineBand.Normal, CaffeineBand.Caution, CaffeineBand.Warning)
+    
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp) ) {
+        caffeineBands.forEach { band ->
+            IndicatorRow(band = band)
         }
     }
 }
 
 @Composable
-fun Caution() {
+fun IndicatorRow(band: CaffeineBand) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .border(
                 1.dp,
-                Color(0xFFF3A800),
+                band.color,
                 RoundedCornerShape(16.dp)
             ),
         shape = RoundedCornerShape(16.dp),
@@ -90,56 +53,25 @@ fun Caution() {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Caution ❘ 400~600mg/24h",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Color(0xFF38220F)
-                )
-            }
             Icon(
-                imageVector = Icons.Filled.ErrorOutline,
-                tint = Color(0xFFF3A800),
-                contentDescription = "Normal Icon",
+                imageVector = band.icon,
+                tint = band.color,
+                contentDescription = "${band.name} Icon",
                 modifier = Modifier.size(24.dp)
             )
-        }
-    }
-}
-
-@Composable
-fun Warning() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                1.dp,
-                Color(0xFFE53935),
-                RoundedCornerShape(16.dp)
-            ),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFECE0D1))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Warning ❘ > 600mg/24h",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    color = Color(0xFF38220F)
-                )
-            }
-            Icon(
-                imageVector = Icons.Filled.WarningAmber,
-                tint = Color(0xFFE53935),
-                contentDescription = "Normal Icon",
-                modifier = Modifier.size(24.dp)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = band.name,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF38220F)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = band.range,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF38220F)
             )
         }
     }
