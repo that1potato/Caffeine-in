@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.caffeine_in.caffeineBand.CaffeineBand
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.navigation.Destination
 import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
@@ -40,6 +41,7 @@ import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.text.toDouble
 
 const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
 
@@ -59,6 +61,9 @@ fun CaffeineTrackerScreen(
     val listState = rememberLazyListState()
     val shouldScrollToTop by caffeineTrackerViewModel.scrollToTopEvent.collectAsState()
     val totalIntake24Hours by caffeineTrackerViewModel.totalIntake24Hours
+    
+    // get the current caffeine band to indicate
+    val currentBand = CaffeineBand.getBand(totalIntake24Hours.toDouble())
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -110,7 +115,7 @@ fun CaffeineTrackerScreen(
             TodaysTotalSection(
                 animatedProgress = animatedProgress,
                 caffeineAmount = displayedCaffeineMg,
-                totalIntake24Hours = totalIntake24Hours,
+                currentBand = currentBand,
                 onInfoClick = { showIndicatorDialog.value = true }
             )
             

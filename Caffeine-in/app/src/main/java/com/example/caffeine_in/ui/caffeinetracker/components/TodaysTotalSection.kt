@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -50,7 +48,7 @@ import kotlin.math.roundToInt
 fun TodaysTotalSection(
     animatedProgress: Float,
     caffeineAmount: Float,
-    totalIntake24Hours: Float,
+    currentBand: CaffeineBand,
     onInfoClick: () -> Unit
 ) {
     
@@ -110,7 +108,7 @@ fun TodaysTotalSection(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         IndicatorButton(
-            totalIntake24Hours = totalIntake24Hours,
+            currentBand = currentBand,
             onInfoClick = onInfoClick
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -126,12 +124,9 @@ fun TodaysTotalSection(
 
 @Composable
 fun IndicatorButton(
-    totalIntake24Hours: Float,
+    currentBand: CaffeineBand,
     onInfoClick: () -> Unit
 ) {
-    // get the current caffeine band to indicate
-    val currentBand = CaffeineBand.getBand(totalIntake24Hours.toDouble())
-    
     AnimatedContent(
         targetState = currentBand,
         // transitionSpec =
