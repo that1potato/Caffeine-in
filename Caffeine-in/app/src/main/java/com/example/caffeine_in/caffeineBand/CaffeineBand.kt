@@ -12,9 +12,9 @@ sealed class CaffeineBand(
     val color: Color,
     val icon: ImageVector
 ) {
-    object Normal : CaffeineBand("Normal", Color(0xFF70B058), Icons.Filled.CheckCircleOutline)
-    object Caution : CaffeineBand("Caution", Color(0xFFF3A800), Icons.Filled.ErrorOutline)
-    object Warning : CaffeineBand("Warning", Color(0xFFE53935), Icons.Filled.WarningAmber)
+    object Normal : CaffeineBand("NORMAL", Color(0xFF70B058), Icons.Filled.CheckCircleOutline)
+    object Caution : CaffeineBand("CAUTION", Color(0xFFF3A800), Icons.Filled.ErrorOutline)
+    object Warning : CaffeineBand("WARNING", Color(0xFFE53935), Icons.Filled.WarningAmber)
     
     companion object {
         fun getBand(caffeineAmount: Double): CaffeineBand {
