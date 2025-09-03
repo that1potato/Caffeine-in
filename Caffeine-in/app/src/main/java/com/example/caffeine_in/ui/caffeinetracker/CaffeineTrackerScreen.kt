@@ -41,7 +41,6 @@ import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.text.toDouble
 
 const val MAX_CAFFEINE_AMOUNT = 400 // 400mg caffeine intake a day is safe for most adults
 
