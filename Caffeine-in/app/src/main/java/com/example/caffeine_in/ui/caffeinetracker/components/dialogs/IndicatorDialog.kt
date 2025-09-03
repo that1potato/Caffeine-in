@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.caffeine_in.caffeineBand.CaffeineBand
+import com.example.caffeine_in.ui.theme.FiraCodeFontFamily
 
 @Composable
 fun IndicatorDialog(
@@ -31,7 +32,8 @@ fun IndicatorDialog(
             Text(
                 text = currentBand.description,
                 color = Color(0xFF38220F),
-                fontSize = 12.sp,
+                fontSize = 16.sp,
+                fontFamily = FiraCodeFontFamily,
                 fontWeight = FontWeight.Normal
             )
         },

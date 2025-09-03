@@ -20,7 +20,7 @@ sealed class CaffeineBand(
             color = Color(0xFF70B058),
             icon = Icons.Filled.CheckCircleOutline,
             range = "≤ 400mg/24h",
-            description = ""
+            description = "Your caffeine intake is within the FDA recommend range."
         )
     object Caution :
         CaffeineBand(
@@ -28,7 +28,7 @@ sealed class CaffeineBand(
             color = Color(0xFFF3A800),
             icon = Icons.Filled.ErrorOutline,
             range = "400~600mg/24h",
-            description = ""
+            description = "Your caffeine intake is over the FDA recommended range."
         )
     object Warning :
         CaffeineBand(
@@ -36,7 +36,7 @@ sealed class CaffeineBand(
             color = Color(0xFFE53935),
             icon = Icons.Filled.WarningAmber,
             range = "> 600mg/24h",
-            description = ""
+            description = "Your caffeine intake is significantly higher than the FDA recommended range."
         )
     
     companion object {
