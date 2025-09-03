@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.caffeine_in.caffeineBand.CaffeineBand
 import com.example.caffeine_in.ui.caffeinetracker.MAX_CAFFEINE_AMOUNT
 import kotlin.math.roundToInt
 
@@ -49,6 +50,7 @@ import kotlin.math.roundToInt
 fun TodaysTotalSection(
     animatedProgress: Float,
     caffeineAmount: Float,
+    totalIntake24Hours: Float,
     onInfoClick: () -> Unit
 ) {
     
@@ -107,7 +109,10 @@ fun TodaysTotalSection(
         modifier = Modifier.width(IntrinsicSize.Max)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        IndicatorButton(onInfoClick = onInfoClick)
+        IndicatorButton(
+            totalIntake24Hours = totalIntake24Hours,
+            onInfoClick = onInfoClick
+        )
         Spacer(modifier = Modifier.height(8.dp))
         CaffeineIndex(
             animatedProgress = animatedProgress,
@@ -121,11 +126,15 @@ fun TodaysTotalSection(
 
 @Composable
 fun IndicatorButton(
+    totalIntake24Hours: Float,
     onInfoClick: () -> Unit
 ) {
+    // get the current caffeine band to indicate
+    val currentBand = CaffeineBand.getBand(totalIntake24Hours.toDouble())
+    
     Button(
         onClick = onInfoClick,
-        border = BorderStroke(0.5.dp, Color(0xFF70B058)), // should match the color in the info page
+        border = BorderStroke(0.5.dp, currentBand.color), // should match the color in the info page
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
         contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
     ) {
@@ -133,14 +142,14 @@ fun IndicatorButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.CheckCircleOutline, // should match the icon in the info page
+                imageVector = currentBand.icon, // should match the icon in the info page
                 contentDescription = "Indicator Icon",
-                tint = Color(0xFF70B058), // should match the color in the info page
+                tint = currentBand.color, // should match the color in the info page
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "NORMAL", // should match the band in the info page
+                text = currentBand.name, // should match the band in the info page
                 maxLines = 1,
                 color = Color(0xFF967259),
                 fontSize = 16.sp,

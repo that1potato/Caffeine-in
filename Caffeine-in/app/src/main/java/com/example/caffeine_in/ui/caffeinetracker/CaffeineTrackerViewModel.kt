@@ -51,6 +51,10 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
 
     private val _scrollToTopEvent = MutableStateFlow(false)
     val scrollToTopEvent: StateFlow<Boolean> = _scrollToTopEvent.asStateFlow()
+    
+    // caffeine band calculation
+    private val _totalIntake24Hours = mutableFloatStateOf(0f)
+    val totalIntake24Hours: State<Float> = _totalIntake24Hours
 
     init {
         // preload showcase data if empty && first time launching
@@ -79,6 +83,8 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
                 _historyList.value = history
             }
         }
+        
+        calculate24HourTotal()
     }
 
     private fun loadAndStart() {
@@ -264,5 +270,22 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     override fun onCleared() {
         super.onCleared()
         decayCalculationJob?.cancel()
+    }
+    
+    // sums the caffeine intake in the last 24 hours
+    private fun calculate24HourTotal() {
+        viewModelScope.launch {
+            dataRepository.intakeListFlow.collect { intakes ->
+                val currentTime = System.currentTimeMillis()
+                val twentyFourHoursAgo = currentTime - (24 * 60 * 60 * 1000L)
+                
+                val total = intakes
+                    .filter { it.timestampMillis >= twentyFourHoursAgo }
+                    .sumOf { it.amount }
+                    .toFloat()
+                
+                _totalIntake24Hours.floatValue = total
+            }
+        }
     }
 }

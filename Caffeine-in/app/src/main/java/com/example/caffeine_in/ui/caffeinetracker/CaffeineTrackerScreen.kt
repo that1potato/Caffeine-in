@@ -58,6 +58,7 @@ fun CaffeineTrackerScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val shouldScrollToTop by caffeineTrackerViewModel.scrollToTopEvent.collectAsState()
+    val totalIntake24Hours by caffeineTrackerViewModel.totalIntake24Hours
     
     val animatedProgress by animateFloatAsState(
         targetValue = 1.0f,
@@ -109,6 +110,7 @@ fun CaffeineTrackerScreen(
             TodaysTotalSection(
                 animatedProgress = animatedProgress,
                 caffeineAmount = displayedCaffeineMg,
+                totalIntake24Hours = totalIntake24Hours,
                 onInfoClick = { showIndicatorDialog.value = true }
             )
             
