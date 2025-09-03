@@ -132,29 +132,35 @@ fun IndicatorButton(
     // get the current caffeine band to indicate
     val currentBand = CaffeineBand.getBand(totalIntake24Hours.toDouble())
     
-    Button(
-        onClick = onInfoClick,
-        border = BorderStroke(0.5.dp, currentBand.color), // should match the color in the info page
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+    AnimatedContent(
+        targetState = currentBand,
+        // transitionSpec =
+        label = "IndicatorAnimation"
+    ) { targetBand ->
+        Button(
+            onClick = onInfoClick,
+            border = BorderStroke(0.5.dp, targetBand.color), // should match the color in the info page
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFECE0D1)),
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)
         ) {
-            Icon(
-                imageVector = currentBand.icon, // should match the icon in the info page
-                contentDescription = "Indicator Icon",
-                tint = currentBand.color, // should match the color in the info page
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = currentBand.name, // should match the band in the info page
-                maxLines = 1,
-                color = Color(0xFF967259),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = targetBand.icon, // should match the icon in the info page
+                    contentDescription = "Indicator Icon",
+                    tint = targetBand.color, // should match the color in the info page
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = targetBand.name, // should match the band in the info page
+                    maxLines = 1,
+                    color = Color(0xFF967259),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }
