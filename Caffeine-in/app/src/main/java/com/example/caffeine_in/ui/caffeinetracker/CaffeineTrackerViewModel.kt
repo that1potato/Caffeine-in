@@ -14,7 +14,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 
@@ -275,17 +278,28 @@ class CaffeineTrackerViewModel(application: Application) : AndroidViewModel(appl
     // sums the caffeine intake in the last 24 hours
     private fun calculate24HourTotal() {
         viewModelScope.launch {
-            dataRepository.intakeListFlow.collect { intakes ->
-                val currentTime = System.currentTimeMillis()
-                val twentyFourHoursAgo = currentTime - (24 * 60 * 60 * 1000L)
-                
-                val total = intakes
-                    .filter { it.timestampMillis >= twentyFourHoursAgo }
-                    .sumOf { it.amount }
-                    .toFloat()
-                
-                _totalIntake24Hours.floatValue = total
+            val tickerFlow = flow {
+                while (true) {
+                    emit(Unit)
+                    delay(60_000L) // Emit every minute
+                }
             }
+            
+            tickerFlow
+                .combine(dataRepository.intakeListFlow) { _, intakes ->
+                    val currentTime = System.currentTimeMillis()
+                    val twentyFourHoursAgo = currentTime - (24 * 60 * 60 * 1000L)
+                    //val twentyFourSecsAgo = currentTime - (24 * 1000L) // for debugging
+                    
+                    intakes
+                        .filter { it.timestampMillis >= twentyFourHoursAgo }
+                        .sumOf { it.amount }
+                        .toFloat()
+                }
+                .distinctUntilChanged() // Only update if the value actually changed
+                .collect { total ->
+                    _totalIntake24Hours.floatValue = total
+                }
         }
     }
 }
