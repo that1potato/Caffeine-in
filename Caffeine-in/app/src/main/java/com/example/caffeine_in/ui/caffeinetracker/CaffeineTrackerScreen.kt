@@ -32,11 +32,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.caffeine_in.caffeineBand.CaffeineBand
 import com.example.caffeine_in.data.CaffeineSource
 import com.example.caffeine_in.navigation.Destination
-import com.example.caffeine_in.ui.caffeinetracker.components.AddNewCaffeineDialog
-import com.example.caffeine_in.ui.caffeinetracker.components.EditCaffeineDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.AddNewCaffeineDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.EditCaffeineDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.History
 import com.example.caffeine_in.ui.caffeinetracker.components.HistoryHeader
-import com.example.caffeine_in.ui.caffeinetracker.components.IndicatorDialog
+import com.example.caffeine_in.ui.caffeinetracker.components.dialogs.IndicatorDialog
 import com.example.caffeine_in.ui.caffeinetracker.components.TodaysTotalSection
 import com.example.caffeine_in.ui.theme.CaffeineinTheme
 import kotlinx.coroutines.Job
@@ -219,6 +219,7 @@ fun CaffeineTrackerScreen(
     // ---- indicator dialog ----
     if (showIndicatorDialog.value) {
         IndicatorDialog(
+            currentBand = currentBand,
             onDismiss = { showIndicatorDialog.value = false },
             onConfirm = { navController.navigate(Destination.Info.route) }
         )
